@@ -1,0 +1,17 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Ocultando: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc en el menú Contextual del Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCR\Drive\shell\Windows.CleanUp"; Name = ""; Value = ""; Type = ""; Action = "Delete"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo ocultar $desc en el menú Contextual del Explorador de Archivos." -ForegroundColor Gray
+}

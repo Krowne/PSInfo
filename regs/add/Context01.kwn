@@ -1,0 +1,30 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Añadiendo: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc al Menú Contextual del Explorador de Windows." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCR\Directory\background\shell\01Cmd"; Name = "MUIVerb"; Value = "Simbolo de Sistema CMD"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\01Cmd"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\01Cmd"; Name = "ExtendedSubCommandsKey"; Value = "Directory\ContextMenus\MenuPrompt\cmd"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "MUIVerb"; Value = "CMD como Administrador"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas\command"; Name = "(Default)"; Value = "cmd.exe /s /k pushd '%%V'"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "MUIVerb"; Value = "Windows PowerShell"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "ExtendedSubCommandsKey"; Value = "Directory\ContextMenus\MenuPrompt\Powershell"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "MUIVerb"; Value = "PowerShell modo Administrador"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas\command"; Name = "(Default)"; Value = "powershell.exe -noexit -command Set-Location '%%V'"; Type = "String"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo añadir $desc al Menú Contextual del Explorador de Windows." -ForegroundColor Gray
+}

@@ -1,0 +1,7 @@
+# Rutas y variables para las claves del registro
+# Especificamos que es de tipo String para REG_SZ (Cadena de texto)
+# Especificamos que es de tipo DWord para REG_DWORD (Número entero de 32 bits)
+# Especificamos que es de tipo QWord para REG_QWORD (Número entero de 64 bits)
+# Especificamos que es de tipo Binary para REG_BINARY (Datos binarios, array de bytes)
+# Especificamos que es de tipo MultiString para REG_MULTI_SZ (Lista de cadenas de texto)
+# Especificamos que es de tipo String para REG_EXPAND_SZ (Cadena de texto con variables de entorno)

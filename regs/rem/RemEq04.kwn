@@ -1,0 +1,20 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Ocultando: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc de Este Equipo en el Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{1CF1260C-4DD0-4ebb-811F-33C572699FDE}"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{1CF1260C-4DD0-4ebb-811F-33C572699FDE}"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{3dfdf296-dbec-4fb4-81d1-6a3438bcf4de}"; Name = ""; Value = ""; Type = ""; Action = "Delete"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo ocultar $desc de Este Equipo en el Explorador de Windows." -ForegroundColor Gray
+}

@@ -1,0 +1,20 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Añadiendo: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc a Este Equipo en el Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{374DE290-123F-4565-9164-39C4925E467B}"; Name = ""; Value = ""; Type = ""; Action = "Add"},
+		@{Path = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{088e3905-0323-4b02-9826-5d99428e115f}"; Name = ""; Value = ""; Type = ""; Action = "Add"},
+		@{Path = "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{374DE290-123F-4565-9164-39C4925E467B}"; Name = ""; Value = ""; Type = ""; Action = "Add"},
+		@{Path = "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\NameSpace\{088e3905-0323-4b02-9826-5d99428e115f}"; Name = ""; Value = ""; Type = ""; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo añadir $desc a Este Equipo en el Explorador de Archivos." -ForegroundColor Gray
+}

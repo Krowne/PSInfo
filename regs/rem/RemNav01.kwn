@@ -1,0 +1,18 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Ocultando: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc en el Panel del Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCU\Software\Classes\CLSID\{031E4825-7B94-4dc3-B131-E946B44C8DD5}"; Name = "System.IsPinnedToNameSpaceTree"; Value = 0; Type = "DWORD"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo ocultar $desc en el Panel del Explorador de Archivos." -ForegroundColor Gray
+}

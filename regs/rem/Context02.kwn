@@ -1,0 +1,17 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Ocultando: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc del menú Contextual del Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32"; Name = "(Default)"; Value = ""; Type = "String"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo ocultar $desc del menú Contextual del Explorador de Archivos." -ForegroundColor Gray
+}

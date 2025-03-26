@@ -1,0 +1,33 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Añadiendo: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc al Panel del Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCU\SOFTWARE\Classes\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "(default)"; Value = "Favorites"; Type = "String"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "FolderValueFlags"; Value = 40; Type = "DWord"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "SortOrderIndex"; Value = 4; Type = "DWord"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "System.IsPinnedToNameSpaceTree"; Value = 1; Type = "DWord"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}\DefaultIcon"; Name = "(default)"; Value = "%SystemRoot%\system32\imageres.dll,-185"; Type = "String"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}\ShellFolder"; Name = "Attributes"; Value = 1879113728; Type = "DWord"; Action = "Add"},
+		
+		@{Path = "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "(default)"; Value = ""; Type = "String"; Action = "Add"},
+		
+		@{Path = "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"; Name = "{323CA680-C24D-4099-B94D-446DD2D7249E}"; Value = 1; Type = "DWord"; Action = "Add"},
+		
+		@{Path = "HKCU\SOFTWARE\Classes\Wow6432Node\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "(default)"; Value = "Favorites"; Type = "String"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\Wow6432Node\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "System.IsPinnedToNameSpaceTree"; Value = 1; Type = "DWord"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\Wow6432Node\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "FolderValueFlags"; Value = 40; Type = "DWord"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\Wow6432Node\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = "SortOrderIndex"; Value = 4; Type = "DWord"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\Wow6432Node\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}\DefaultIcon"; Name = "(default)"; Value = "%SystemRoot%\system32\imageres.dll,-185"; Type = "String"; Action = "Add"},
+		@{Path = "HKCU\SOFTWARE\Classes\Wow6432Node\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}\ShellFolder"; Name = "Attributes"; Value = 1879113728; Type = "DWord"; Action = "Add"}
+	)
+	
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo añadir $desc al Panel del Explorador de Archivos." -ForegroundColor Gray
+}

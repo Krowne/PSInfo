@@ -1,0 +1,20 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Añadiendo: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc al Menú Contextual del Explorador de Windows." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCR\Drive\shell\Windows.CleanUp"; Name = "CommandStateSync"; Value = ""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Drive\shell\Windows.CleanUp"; Name = "ExplorerCommandHandler"; Value = "{9cca66bb-9c78-4e59-a76f-a5e9990b8aa0}"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Drive\shell\Windows.CleanUp"; Name = "Icon"; Value = "$env:SystemRoot\System32\cleanmgr.exe,-104"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Drive\shell\Windows.CleanUp"; Name = "ImpliedSelectionModel"; Value = 1; Type = "DWORD"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo añadir $desc al Menú Contextual del Explorador de Windows." -ForegroundColor Gray
+}

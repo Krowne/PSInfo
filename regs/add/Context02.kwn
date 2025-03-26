@@ -1,0 +1,18 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Activando: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc en el Menú Contextual del Explorador de Windows." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InProcServer32"; Name = ""; Value = "$env:SystemRoot\System32\Windows.UI.FileExplorer.dll"; Type = "String"; Action = "Add"}
+		@{Path = "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InProcServer32"; Name = "ThreadingModel"; Value = "Apartment"; Type = "String"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo activar $desc en el Menú Contextual del Explorador de Windows." -ForegroundColor Gray
+}

@@ -1,0 +1,21 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Añadiendo: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc al Panel del Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCU\Software\Classes\CLSID\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}"; Name = "(Default)"; Value = "CLSID_MSGraphHomeFolder"; Type = "String"; Action = "Add"},
+		@{Path = "HKCU\Software\Classes\CLSID\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}"; Name = "System.IsPinnedToNameSpaceTree"; Value = 1; Type = "DWord"; Action = "Add"},
+		@{Path = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}"; Name = "(Default)"; Value = "CLSID_MSGraphHomeFolder"; Type = "String"; Action = "Add"},
+		@{Path = "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{f874310e-b6b7-47dc-bc84-b9e6b38f5903}"; Name = "HiddenByDefault"; Value = 0; Type = "DWord"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo añadir $desc al Panel del Explorador de Archivos." -ForegroundColor Gray
+}
+

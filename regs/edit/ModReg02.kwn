@@ -1,0 +1,16 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Modificando: " -ForegroundColor Green -NoNewline
+
+	$keys = @(
+		@{Path = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer"; Name = "ShowDriveLettersFirst"; Value = 4; Type = "DWORD"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo modificar la $desc en el Panel del Explorador de Archivos." -ForegroundColor Gray
+}

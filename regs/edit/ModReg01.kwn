@@ -1,0 +1,17 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Modificando: " -ForegroundColor Green -NoNewline
+	Write-Host "Posicionando $desc en el Panel del Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCR\CLSID\{031E4825-7B94-4dc3-B131-E946B44C8DD5}"; Name = "SortOrderIndex"; Value = 66; Type = "DWORD"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo modificar la $desc en el Panel del Explorador de Archivos." -ForegroundColor Gray
+}

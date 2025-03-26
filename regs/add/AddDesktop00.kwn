@@ -1,0 +1,18 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Añadir: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc en el Escritorio." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"; Name = "(Default)"; Value = "Windows Spotlight"; Type = "String"; Action = "Add"},
+		@{Path = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"; Name = "{2cc5ca98-6485-489a-920e-b3e88a6ccce3}"; Value = 0; Type = "DWord"; Action = "Add"}
+	)
+
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo añadir $desc en el Escritorio." -ForegroundColor Gray
+}

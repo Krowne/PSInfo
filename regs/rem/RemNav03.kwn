@@ -1,0 +1,20 @@
+$desc = $($_.Text)
+try {
+	Write-Host "Ocultando: " -ForegroundColor Green -NoNewline
+	Write-Host "$desc en el Panel del Explorador de Archivos." -ForegroundColor Gray
+
+	$keys = @(
+		@{Path = "HKCU\SOFTWARE\Classes\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKCU\SOFTWARE\Classes\Wow6432Node\CLSID\{323CA680-C24D-4099-B94D-446DD2D7249E}"; Name = ""; Value = ""; Type = ""; Action = "Delete"}
+	)
+	
+	foreach ($key in $keys) {
+		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
+	}
+}
+catch {
+	Write-Host "Error: " -ForegroundColor Red -NoNewline
+	Write-Host "No se puedo ocultar $desc en el Panel del Explorador de Archivos." -ForegroundColor Gray
+}
+

@@ -1,0 +1,59 @@
+function Manage-Registration-Keys {
+	param(
+		[string]$path,   # Ruta de la clave de registro
+		[string]$name = "(Default)",   # Nombre del valor o "" para el valor por defecto
+		[object]$value,  # Valor que se desea añadir (puede ser numérico o cadena)
+		[string]$type,   # Tipo de valor (REG_SZ, REG_DWORD, etc.)
+		[string]$action = "Add"   # Acción: "Add" para añadir, "Delete" para eliminar
+	)
+
+	# Asegurar que la clave existe
+	if (!(Test-Path "Registry::$path") -and $action -eq "Add") {
+		New-Item -Path "Registry::$path" -Force | Out-Null
+	}
+
+	# Si la acción es "Delete"
+	if ($action -eq "Delete") {
+		try {
+			if ([string]::IsNullOrEmpty($name) -and [string]::IsNullOrEmpty($value) -and [string]::IsNullOrEmpty($type)) {
+				# Comprobamos si la ruta existe antes de intentar eliminarla
+				if (-not (Test-Path "Registry::$path")) {
+					throw "No se puede eliminar la ruta del registro $path porque no existe."
+				}
+				# Si no se proporciona ni un nombre ni un valor, eliminamos la clave completa
+				Remove-Item -Path "Registry::$path" -Recurse -Force -ErrorAction Stop
+			} elseif ([string]::IsNullOrEmpty($value)) {
+				# Comprobamos si la propiedad existe antes de intentar eliminarla
+				if (-not (Test-Path "Registry::$path\$name")) {
+					throw "No se puede eliminar la propiedad $path\$name porque no existe."
+				}
+				# Si no se proporciona un valor, eliminamos el valor correspondiente a "name"
+				Remove-ItemProperty -Path "Registry::$path" -Name $name -Force -ErrorAction Stop
+			} elseif ([string]::IsNullOrEmpty($name)) {
+				# Si se proporciona un valor pero no un nombre, eliminamos ese valor específico por defecto
+				Remove-ItemProperty -Path "Registry::$path" -Name "(Default)" -Force -ErrorAction Stop
+			}
+		}
+		catch {
+			# Write-Host "Error: " -ForegroundColor Red -NoNewline
+			# Write-Host $_.Exception.Message -ForegroundColor Gray
+		}
+	}
+	# Si la acción es "Add"
+	elseif ($action -eq "Add") {
+		if ([string]::IsNullOrEmpty($name)) {
+			# Si el nombre está vacío, establecer el valor predeterminado
+			Set-ItemProperty -Path "Registry::$path" -Name "(Default)" -Value $value
+		} else {
+		# Convertir el tipo si es necesario
+			if ($type -eq "DWord" -or $type -eq "QWord") {
+				$value = [Convert]::ToInt32($value)
+			}
+			# Establecer el valor con el nombre y tipo especificado
+			Set-ItemProperty -Path "Registry::$path" -Name $name -Value $value -Type $type
+		}
+	}
+	else {
+		Write-Host "Acción no válida. Usa 'Add' o 'Delete'."
+	}
+}
