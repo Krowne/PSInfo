@@ -1,0 +1,31 @@
+Clear-Host
+# Script de mantenimiento del sistema con mensajes informativos
+
+function Show-Info {
+    param([string]$Message)
+    Write-Host "I:" -ForegroundColor Blue -NoNewline
+    Write-Host " $Message" -ForegroundColor White
+}
+
+# Ejecutar DISM /ScanHealth
+Show-Info "Iniciando DISM /ScanHealth..."
+Start-Process -FilePath "DISM.exe" -ArgumentList "/Online", "/Cleanup-image", "/Scanhealth" -Wait -NoNewWindow
+Show-Info "DISM /ScanHealth completado."
+
+# Ejecutar DISM /RestoreHealth
+Show-Info "Iniciando DISM /RestoreHealth..."
+Start-Process -FilePath "DISM.exe" -ArgumentList "/Online", "/Cleanup-image", "/Restorehealth" -Wait -NoNewWindow
+Show-Info "DISM /RestoreHealth completado."
+
+# Ejecutar DISM /StartComponentCleanup
+Show-Info "Iniciando DISM /StartComponentCleanup..."
+Start-Process -FilePath "DISM.exe" -ArgumentList "/Online", "/Cleanup-image", "/Startcomponentcleanup" -Wait -NoNewWindow
+Show-Info "DISM /StartComponentCleanup completado."
+
+# Ejecutar SFC /scannow
+Show-Info "Iniciando SFC /scannow..."
+Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait -NoNewWindow
+Show-Info "SFC /scannow completado."
+
+# Finalización
+Show-Info "Todas las tareas han sido completadas."

@@ -1,0 +1,20 @@
+Cls
+# Obtener todos los perfiles de red Wi-Fi guardados
+$perfiles = netsh wlan show profiles | Select-String "Perfil de todos los usuarios" | ForEach-Object {
+    ($_ -split ":")[1].Trim()
+}
+
+# Recorrer cada perfil y obtener la contraseña
+foreach ($perfil in $perfiles) {
+    $info = netsh wlan show profile name="$perfil" key=clear
+    $clave = ($info | Select-String "Contenido de la clave" | ForEach-Object {
+        ($_ -split ":")[1].Trim()
+    })
+
+    if (-not $clave) {
+        $clave = "(sin clave o no accesible)"
+    }
+
+    Write-Host "$perfil" -ForegroundColor Gray -NoNewline
+    Write-Host ": $clave" -ForegroundColor Green
+}
