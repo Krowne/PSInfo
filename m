@@ -493,15 +493,15 @@ function SelectedTheButtons {
 }
 
 $fondo = '#aeb2cd'
-$Window = Create-CustomWindow -Width 600 -Height 570 -Fondo $fondo -Title 'Menú de configuración del Sistema' -iconUrl $git'icons/icon.ico'
+$Window = Create-CustomWindow -Width 600 -Height 610 -Fondo $fondo -Title 'Menú de configuración del Sistema' -iconUrl $git'icons/icon.ico'
 $Window.Add_Paint({
     $graphics = $_.Graphics
     $fondo = '#c4c7dd'
     $fondoHvr = '#d4d8f6'
-    Crear-Imagen -graphics $graphics -alto 260 -ancho 550 -top 15 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 255
-    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 290 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
-    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 370 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
-    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 450 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
+    Crear-Imagen -graphics $graphics -alto 300 -ancho 550 -top 15 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 255
+    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 330 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
+    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 410 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
+    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 490 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
 })
 
 # Azul #b3baf5 #7785ff
@@ -522,6 +522,8 @@ $sys8 = Create-CombinedImage -Window $Window -top 190 -left 30 -ancho 250 -filte
 $sys9 = Create-CombinedImage -Window $Window -top 190 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Panel de Sonido'
 $sys10 = Create-CombinedImage -Window $Window -top 230 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Propiedades del Sistema' 
 $sys11 = Create-CombinedImage -Window $Window -top 230 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Información del sistema'
+$sys12 = Create-CombinedImage -Window $Window -top 270 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Reparar Windows'
+$sys13 = Create-CombinedImage -Window $Window -top 270 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Redes guardadas'
 
 $sys0.add_Click({ irm https://github.com/Krowne/WinInfo/raw/refs/heads/main/get-licence | iex })
 $sys1.add_Click({ slui 3 })
@@ -535,11 +537,13 @@ $sys8.add_Click({ control.exe /name Microsoft.RegionAndLanguage })
 $sys9.add_Click({ control mmsys.cpl })
 $sys10.add_Click({ control sysdm.cpl })
 $sys11.add_Click({ msinfo32 })
+$sys12.add_Click({ irm https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/repara.kwn | iex })
+$sys13.add_Click({ irm https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/get-network.kwn | iex })
 
 $fondo = '#c9e8cb'
 $fondoHvr = '#71bd76'
-$clean0 = Create-CombinedImage -Window $Window -top 305 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Historial PS' 
-$clean1 = Create-CombinedImage -Window $Window -top 305 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Windows Update'
+$clean0 = Create-CombinedImage -Window $Window -top 345 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Historial PS' 
+$clean1 = Create-CombinedImage -Window $Window -top 345 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Windows Update'
 
 $clean0.add_Click({ 
     Clear-Host
@@ -578,8 +582,8 @@ $clean1.add_Click({
 })
 $fondo = '#eae2bb'
 $fondoHvr = '#c3b77a'
-$apps0 = Create-CombinedImage -Window $Window -top 385 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Instalar Aplicaciones' 
-$apps1 = Create-CombinedImage -Window $Window -top 385 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Gestionar Entradas de Registro'
+$apps0 = Create-CombinedImage -Window $Window -top 425 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Instalar Aplicaciones' 
+$apps1 = Create-CombinedImage -Window $Window -top 425 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Gestionar Entradas de Registro'
 
 function set-Hand {
     param (
@@ -1204,8 +1208,8 @@ $apps1.add_Click({
 })
 $fondo = '#fab7b9'
 $fondoHvr = '#c14e51'
-$device0 = Create-CombinedImage -Window $Window -top 465 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Reiniciar' 
-$device1 = Create-CombinedImage -Window $Window -top 465 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Apagar'
+$device0 = Create-CombinedImage -Window $Window -top 505 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Reiniciar' 
+$device1 = Create-CombinedImage -Window $Window -top 505 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Apagar'
 
 $device0.add_Click({ 
     Clear-Host
