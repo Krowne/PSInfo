@@ -1,7 +1,14 @@
 Cls
+
 # Obtener todos los perfiles de red Wi-Fi guardados
 $perfiles = netsh wlan show profiles | Select-String "Perfil de todos los usuarios" | ForEach-Object {
     ($_ -split ":")[1].Trim()
+}
+
+# Verificar si se encontraron perfiles
+if (-not $perfiles -or $perfiles.Count -eq 0) {
+    Write-Host "No se encontraron redes Wi-Fi guardadas en este equipo." -ForegroundColor Red
+    return
 }
 
 # Recorrer cada perfil y obtener la contraseña
@@ -18,3 +25,4 @@ foreach ($perfil in $perfiles) {
     Write-Host "$perfil" -ForegroundColor Gray -NoNewline
     Write-Host ": $clave" -ForegroundColor Green
 }
+
