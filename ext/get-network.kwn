@@ -29,5 +29,6 @@ foreach ($perfil in $perfiles) {
     Write-Host "Red: " -ForegroundColor Green -NoNewline
     Write-Host $perfil -ForegroundColor Gray
     Write-Host "     $clave" -ForegroundColor Gray
+    Write-Host " "
 }
 
