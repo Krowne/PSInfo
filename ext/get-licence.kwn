@@ -1,0 +1,511 @@
+# Cambiar la página de códigos a UTF-8
+chcp 65001 > $null
+
+# Configurar la consola para usar UTF-8
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# Ejecutar el script en segundo plano sin salida en consola
+# Start-Job -ScriptBlock {
+	# Array con las licencias genéricas
+	$genericLicenses = @(
+		"YTMG3-N6DKC-DKB77-7M9GH-8HVX7",
+		"4CPRK-NM3K3-X6XXQ-RXX86-WXCHW",
+		"BT79Q-G7N6G-PGBYW-4YWX6-6F4BT",
+		"N2434-X9D7W-8PF6X-8DV9T-8TYMD",
+		"VK7JG-NPHTM-C97JM-9MPGT-3V66T",
+		"2B87N-8KFHP-DKV6R-Y2C8J-PKCKT",
+		"DXG7C-N36C4-C4HTG-X4T3X-2YV77",
+		"WYPNQ-8C467-V2W6J-TX4WX-WT2RQ",
+		"8PTT6-RNW4C-6V7J2-C2D3X-MHBPB",
+		"GJTYN-HDMQY-FRR76-HVGC7-QPF8P",
+		"YNMGQ-8RYV3-4PGQ3-C8XTP-7CFBY",
+		"84NGF-MHBT6-FXBX8-QWJK7-DRR8H",
+		"XGVPP-NMH47-7TTHJ-W3FW7-8HV2C",
+		"WGGHN-J84D6-QYCPR-T7PJ7-X766F",
+		"FW7NV-4T673-HF4VX-9X4MM-B4H4T",
+		"TX9XD-98N7V-6WMQ6-BX7FG-H8Q99",
+		"3KHY7-WNT83-DGQKR-F7HPR-844BM",
+		"7HNRX-D7KGG-3K4RQ-4WPJ4-YTDFH",
+		"PVMJN-6DFY6-9CCP6-7BKTT-D3WVR",
+		"W269N-WFGWX-YVC9B-4J6C9-T83GX",
+		"MH37W-N47XK-V7XM9-C7227-GCQG9",
+		"NRG8B-VKK3Q-CXVCJ-9G2XF-6Q84J",
+		"9FNHH-K3HBT-3W4TD-6383H-6XYWF",
+		"6TP4R-GNPTD-KYYHQ-7B7DP-J447Y",
+		"YVWGF-BXNMC-HTQYQ-CPQ99-66QFC",
+		"NW6C2-QMPVW-D7KKK-3GKT6-VCFB2",
+		"2WH4N-8QGBV-H22JP-CT43Q-MDWWJ",
+		"NPPR9-FWDCX-D2C8J-H872K-2YT43",
+		"DPH2V-TTNVB-4X9Q3-TJR4H-KHJW4",
+		"YYVX9-NTFWV-6MDM3-9PT4T-4M68B",
+		"44RPN-FTY23-9VTTB-MP9BX-T84FV",
+		"M7XTQ-FN8P6-TTKYV-9D4CC-J462D",
+		"92NFX-8DJQP-P6BBQ-THF9C-7CG2H",
+		"46J3N-RY6B3-BJFDY-VBFT9-V22HG",
+		"PGGM7-N77TC-KVR98-D82KJ-DGPHV",
+		"RHGJR-N7FVY-Q3B8F-KBQ6V-46YP4",
+		"GH37Y-TNG7X-PP2TK-CMRMT-D3WV4",
+		"68WP7-N2JMW-B676K-WR24Q-9D7YC",
+		"37GNV-YCQVD-38XP9-T848R-FC2HD",
+		"33CY4-NPKCC-V98JP-42G8W-VH636",
+		"NF6HC-QH89W-F8WYV-WWXV4-WFG6P",
+		"NH7W7-BMC3R-4W9XT-94B6D-TCQG3",
+		"NTRHT-XTHTG-GBWCG-4MTMP-HH64C",
+		"7B6NC-V3438-TRQG7-8TCCX-H6DDY",
+		"3NF4D-GF9GY-63VKH-QRC3V-7QW8P",
+		"NK96Y-D9CD8-W44CQ-R8YTK-DYJWX",
+		"FWN7H-PF93Q-4GGP8-M8RF3-MDWWW",
+		"WNMTR-4C88C-JK8YV-HQ7T2-76DF9",
+		"2F77B-TNFGY-69QQF-B8YKP-D69TJ",
+		"DCPHK-NFMTC-H88MJ-PFHPY-QJ4BJ",
+		"QFFDN-GRT3P-VKWWX-X7T3R-8B639",
+		"CB7KF-BWN84-R7R2Y-793K2-8XDDG",
+		"WC2BQ-8NRM3-FDDYY-2BFGV-KHKQY",
+		"JCKRF-N37P4-C2D82-9YXRT-4M63B",
+		"WMDGN-G9PQG-XVVXX-R3X43-63DFG",
+		"N69G4-B89J2-4G8F4-WWYCC-J464C",
+		"WVDHN-86M7X-466P6-VHXV7-YY726",
+		"46V6N-VCBYR-KT9KT-6Y4YF-QGJYH",
+		"V7C3N-3W6CM-PDKR2-KW8DQ-RJMRD",
+		"7QNT4-HJDDR-T672J-FBFP4-2J8X9",
+		"4NX4X-C98R3-KBR22-MGBWC-D667X",
+		"NH7GX-2BPDT-FDPBD-WD893-RJMQ4",
+		"NTTX3-RV7VB-T7X7F-WQYYY-9Y92"
+	)
+
+	# Obtiene la información de la versión de Windows
+	$osInfo = [System.Environment]::OSVersion.Version
+
+	# Obtiene el nombre completo de la edición de Windows
+	$edition = Get-WmiObject -Class Win32_OperatingSystem | Select-Object -ExpandProperty Caption
+
+	# Inicializa la imagen predeterminada
+	$versionWindowsImg = "default_icon"
+	$windowsVersion = "No identificada"
+
+	# Verifica si la edición contiene "Windows 11", "Windows 10", etc.
+	if ($edition -like "*Windows 11*") {
+		# Windows 11
+		$windowsVersion = "Windows 11"
+		$versionWindowsImg = "w11_icon"
+	} elseif ($edition -like "*Windows 10*") {
+		# Windows 10
+		$windowsVersion = "Windows 10"
+		$versionWindowsImg = "w10_icon"
+	} elseif ($edition -like "*Windows 7*") {
+		# Windows 7
+		$windowsVersion = "Windows 7"
+		$versionWindowsImg = "w7_icon"
+	} elseif ($edition -like "*Windows 8.1*") {
+		# Windows 8.1
+		$windowsVersion = "Windows 8.1"
+		$versionWindowsImg = "w8_icon"
+	} elseif ($edition -like "*Windows 8*") {
+		# Windows 8
+		$windowsVersion = "Windows 8"
+		$versionWindowsImg = "w8_icon"
+	} else {
+		$windowsVersion = "No identificada"
+	}
+
+	function Get-WindowsProductKeyFromRegistry {
+	  $is64Bit = [Environment]::Is64BitOperatingSystem
+	  if ($is64Bit) {
+		  $view = [Microsoft.Win32.RegistryView]::Registry64
+	  } else {
+		  $view = [Microsoft.Win32.RegistryView]::Registry32
+	  }
+
+	  $localKey = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $view)
+	  $registryKey = $localKey.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion")
+	  $registryKeyValue = $registryKey.GetValue("DigitalProductId")
+	  $localKey.Close()
+
+	  if (-not $registryKeyValue) {
+		  Write-Host "Failed to get DigitalProductId from registry"
+		  return
+	  }
+
+	  $digitalProductId = [byte[]]$registryKeyValue
+	  $isWin8OrUp = ([Environment]::OSVersion.Version.Major -eq 6 -and [Environment]::OSVersion.Version.Minor -ge 2) -or [Environment]::OSVersion.Version.Major -gt 6
+
+	  return (Get-WindowsProductKeyFromDigitalProductId -DigitalProductId $digitalProductId -DigitalProductIdVersion $(if ($isWin8OrUp) { "Windows8AndUp" } else { "UpToWindows7" }))
+	}
+
+	function Get-WindowsProductKeyFromDigitalProductId {
+	  param (
+		  [byte[]]$DigitalProductId,
+		  [string]$DigitalProductIdVersion
+	  )
+
+	  if ($DigitalProductIdVersion -eq "Windows8AndUp") {
+		  return DecodeProductKeyWin8AndUp -DigitalProductId $DigitalProductId
+	  } else {
+		  return DecodeProductKey -DigitalProductId $digitalProductId
+	  }
+	}
+
+	function DecodeProductKey {
+	  param (
+		  [byte[]]$DigitalProductId
+	  )
+
+	  $keyStartIndex = 52
+	  $keyEndIndex = $keyStartIndex + 14
+	  $decodeLength = 29
+	  $decodeStringLength = 15
+	  $decodedChars = @()
+
+	  $digits = 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'M', 'P', 'Q', 'R', 'T', 'V', 'W', 'X', 'Y', '2', '3', '4', '6', '7', '8', '9'
+
+	  for ($i = $keyStartIndex; $i -le $keyEndIndex; $i++) {
+		  $decodedChars += $DigitalProductId[$i]
+	  }
+
+	  for ($i = $decodeLength - 1; $i -ge 0; $i--) {
+		  if (($i + 1) % 6 -eq 0) {
+			  $decodedChars[$i] = '-'
+		  } else {
+			  $digitMapIndex = 0
+			  for ($j = $decodeStringLength - 1; $j -ge 0; $j--) {
+				  $byteValue = ($digitMapIndex -shl 8) -bor $DigitalProductId[$j]
+				  $digitMapIndex = $byteValue % 24
+				  $DigitalProductId[$j] = [math]::Floor($byteValue / 24)
+				  $decodedChars[$i] = $digits[$digitMapIndex]
+			  }
+		  }
+	  }
+
+	  return -join $decodedChars
+	}
+
+	function DecodeProductKeyWin8AndUp {
+	  param (
+		  [byte[]]$DigitalProductId
+	  )
+
+	  $key = ""
+	  $keyOffset = 52
+	  $digits = "BCDFGHJKMPQRTVWXY2346789"
+
+	  $isWin8 = ($DigitalProductId[66] -shr 1) -band 1
+	  $DigitalProductId[66] = ($DigitalProductId[66] -band 0xf7) -bor ($isWin8 -shl 2)
+
+	  for ($i = 24; $i -ge 0; $i--) {
+		  $current = 0
+		  for ($j = 14; $j -ge 0; $j--) {
+			  $current = $current * 256
+			  $current = $DigitalProductId[$j + $keyOffset] + $current
+			  $DigitalProductId[$j + $keyOffset] = [math]::Floor($current / 24)
+			  $current = $current % 24
+		  }
+		  $key = $digits[$current] + $key
+	  }
+
+	  $keypart1 = $key.Substring(1, $current)
+	  $keypart2 = $key.Substring($current + 1)
+	  $key = $keypart1 + "N" + $keypart2
+
+	  for ($i = 5; $i -lt $key.Length; $i += 6) {
+		  $key = $key.Insert($i, "-")
+	  }
+
+	  return $key
+	}
+	
+	# Cargar y almacenar las imágenes para todos los PictureBox
+    $imageUrlGray = "https://mdk.ddns.net/ps/img/btn_gray_440.png"
+    $imageUrlSelected = "https://mdk.ddns.net/ps/img/btn_selected_440.png"
+    $tempImagePathGray = [System.IO.Path]::GetTempFileName()
+    $tempImagePathSelected = [System.IO.Path]::GetTempFileName()
+
+    try {
+        (New-Object System.Net.WebClient).DownloadFile($imageUrlGray, 		$tempImagePathGray)
+    } catch {
+        Write-Host "No se pudo descargar la imagen de la URL $imageUrlGray"
+        return
+    }
+	try {
+        (New-Object System.Net.WebClient).DownloadFile($imageUrlSelected, 	$tempImagePathSelected)
+    } catch {
+        Write-Host "No se pudo descargar la imagen de la URL $imageUrlSelected"
+        return
+    }
+
+    # Cargar las imágenes en variables persistentes
+    $imageGray 		= [System.Drawing.Image]::FromFile($tempImagePathGray)
+    $imageHover 	= [System.Drawing.Image]::FromFile($tempImagePathSelected)
+	
+	# Función para crear y configurar un PictureBox con un botón transparente encima
+    function Add-PictureBoxWithButton {
+        param (
+            [int]$x,                  	# Coordenada X
+            [int]$y,                  	# Coordenada Y
+			[System.Drawing.Image]$img,  # Color del botón
+            [string]$text             	# Texto a mostrar
+        )
+
+        # Crear el PictureBox
+        $pictureBox = New-Object System.Windows.Forms.PictureBox
+        $pictureBox.Size = New-Object System.Drawing.Size(440, 32)
+        $pictureBox.Location = New-Object System.Drawing.Point($x, $y)
+        $pictureBox.BackColor = [System.Drawing.Color]::Transparent
+        $pictureBox.Image = $img
+
+        # Usar Tag para almacenar la imagen original y una propiedad adicional para el texto
+        $pictureBox.Tag = $img  # Guardar la imagen original en Tag
+        $pictureBox.Text = $text  # Guardar el texto en una propiedad adicional
+
+        # Evento para cambiar la imagen al pasar el ratón
+        $pictureBox.add_MouseEnter({
+            param($sender, $eventArgs)
+            $sender.Image = $imageHover
+        })
+
+        # Evento para restaurar la imagen cuando el ratón sale
+        $pictureBox.add_MouseLeave({
+            param($sender, $eventArgs)
+            $sender.Image = $sender.Tag  # Restaurar la imagen original almacenada en Tag
+        })
+
+        # Evento para dibujar el texto en el PictureBox
+        $pictureBox.add_Paint({
+            param($sender, $eventArgs)
+            $graphics = $eventArgs.Graphics
+            $font = New-Object System.Drawing.Font("Segoe UI", 10)
+            $brush = [System.Drawing.Brushes]::Black
+            $text = $sender.Text  # Usar la propiedad 'Text' para el texto
+            $textSize = $graphics.MeasureString($text, $font)
+            $xText = ($sender.ClientSize.Width - $textSize.Width) / 2
+            $yText = ($sender.ClientSize.Height - $textSize.Height) / 2
+            $graphics.DrawString($text, $font, $brush, $xText, $yText)
+        })
+        return $pictureBox
+    }	
+	
+	$key = Get-WindowsProductKeyFromRegistry
+	
+		# Comprobar si la clave de licencia es genérica
+	if ($genericLicenses -contains $key) {
+		$typeLicence = "Genérica."
+		$typeLicenceImg = "generic"
+	} else {
+		$typeLicence = "Original."
+		$typeLicenceImg = "original"
+	}
+
+	##### Interfaz gráfica #####
+	
+	$resolution = 32
+	
+    # Cargar el ensamblado de Windows Forms y Drawing
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
+
+    # Crear una nueva instancia de la ventana (Form)
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = "Clave licencia de Windows"
+    $form.Size = New-Object System.Drawing.Size(480, 240)
+    $form.StartPosition = "CenterScreen"
+    $form.BackColor = [System.Drawing.Color]::FromArgb(0xd4, 0xd4, 0xd4)
+    $form.MaximizeBox = $false
+    $form.MinimizeBox = $false
+    $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+
+    # URL de la imagen
+    $imageUrlWin = "https://mdk.ddns.net/ps/img/$versionWindowsImg.png"
+	$imageUrlLice = "https://mdk.ddns.net/ps/img/licence.png"
+	$imageUrlActi = "https://mdk.ddns.net/ps/img/$typeLicenceImg.png"
+
+    # Ruta temporal donde se descargará la imagen
+    $tempImageWin = [System.IO.Path]::GetTempFileName()
+    $tempImageLice = [System.IO.Path]::GetTempFileName()
+    $tempImageType = [System.IO.Path]::GetTempFileName()
+
+    # Descargar la imagen de la URL y guardarla en la carpeta temporal
+    try {
+        (New-Object System.Net.WebClient).DownloadFile($imageUrlWin, $tempImageWin)
+    } catch {
+        Write-Host "No se pudo descargar la imagen desde la URL $imageUrlWin"
+        return
+    }
+	try {
+		(New-Object System.Net.WebClient).DownloadFile($imageUrlLice, $tempImageLice)
+    } catch {
+        Write-Host "No se pudo descargar la imagen desde la URL $imageUrlLice"
+        return
+    }
+	try {
+		(New-Object System.Net.WebClient).DownloadFile($imageUrlActi, $tempImageType)
+    } catch {
+        Write-Host "No se pudo descargar la imagen desde la URL $imageUrlActi"
+        return
+    }
+
+    # Cargar la imagen desde el archivo temporal
+    $imageWin = [System.Drawing.Image]::FromFile($tempImageWin)
+    $imageLice = [System.Drawing.Image]::FromFile($tempImageLice)
+    $imageType = [System.Drawing.Image]::FromFile($tempImageType)
+	
+	$vY = 20
+	$vYmore = 37
+	$posTextTitle = 150
+
+    # Crear un control PictureBox para la imagen Windows
+    $pictureBoxWin = New-Object System.Windows.Forms.PictureBox
+    $pictureBoxWin.Image = $imageWin
+    $pictureBoxWin.Size = New-Object System.Drawing.Size($resolution, $resolution)  # Tamaño de la imagen 32x32
+    $pictureBoxWin.Location = New-Object System.Drawing.Point(20, $vY)  # Posición 20x20
+    $form.Controls.Add($pictureBoxWin)
+
+    # Crear una etiqueta (Label) para el texto
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = "Versión de Windows:"
+    $label.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
+    $label.AutoSize = $true
+
+    # Posicionar el texto 30 píxeles a la derecha de la imagen y centrado verticalmente con respecto a la altura de la imagen
+    $textX = $pictureBoxWin.Location.X + $pictureBoxWin.Width + 5  # 32 (ancho imagen) + 15 (espaciado)
+    $textY = $pictureBoxWin.Location.Y + ($pictureBoxWin.Height - $label.Height) / 2 # Centrado vertical
+
+    $label.Location = New-Object System.Drawing.Point($textX, $textY)
+
+    $form.Controls.Add($label)
+	
+	# Crear una etiqueta (Label) para el texto
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = "$edition"
+    $label.Font = New-Object System.Drawing.Font("Arial", 10)
+    $label.AutoSize = $true
+
+    # Posicionar el texto 30 píxeles a la derecha de la imagen y centrado verticalmente con respecto a la altura de la imagen
+    $textX = $pictureBoxWin.Location.X + $pictureBoxWin.Width + $posTextTitle  # 32 (ancho imagen) + 15 (espaciado)
+    $textY = $pictureBoxWin.Location.Y + ($pictureBoxWin.Height - $label.Height) / 2 # Centrado vertical
+
+    $label.Location = New-Object System.Drawing.Point($textX, $textY)
+
+    $form.Controls.Add($label)
+
+    # Crear un control PictureBox para la imagen Licencia
+	$vY += $vYmore
+    $pictureBoxLice = New-Object System.Windows.Forms.PictureBox
+    $pictureBoxLice.Image = $imageLice
+    $pictureBoxLice.Size = New-Object System.Drawing.Size($resolution, $resolution)  # Tamaño de la imagen 32x32
+    $pictureBoxLice.Location = New-Object System.Drawing.Point(20, $vY)  # Posición 20x20
+    $form.Controls.Add($pictureBoxLice)
+
+    # Crear una etiqueta (Label) para el texto
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = "Clave del producto:"
+    $label.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
+    $label.AutoSize = $true
+
+    # Posicionar el texto 30 píxeles a la derecha de la imagen y centrado verticalmente con respecto a la altura de la imagen
+    $textX = $pictureBoxLice.Location.X + $pictureBoxLice.Width + 5  # 32 (ancho imagen) + 15 (espaciado)
+    $textY = $pictureBoxLice.Location.Y + ($pictureBoxLice.Height - $label.Height) / 2 # Centrado vertical
+
+    $label.Location = New-Object System.Drawing.Point($textX, $textY)
+
+    $form.Controls.Add($label)
+
+    # Crear una etiqueta (Label) para el texto
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = "$key"
+    $label.Font = New-Object System.Drawing.Font("Arial", 10)
+    $label.AutoSize = $true
+
+    # Posicionar el texto 30 píxeles a la derecha de la imagen y centrado verticalmente con respecto a la altura de la imagen
+    $textX = $pictureBoxLice.Location.X + $pictureBoxLice.Width + $posTextTitle  # 32 (ancho imagen) + 15 (espaciado)
+    $textY = $pictureBoxLice.Location.Y + ($pictureBoxLice.Height - $label.Height) / 2 # Centrado vertical
+
+    $label.Location = New-Object System.Drawing.Point($textX, $textY)
+
+    $form.Controls.Add($label)
+
+    # Crear un control PictureBox para la imagen Tipo de licencia
+	$vY += $vYmore
+    $pictureBoxType = New-Object System.Windows.Forms.PictureBox
+    $pictureBoxType.Image = $imageType
+    $pictureBoxType.Size = New-Object System.Drawing.Size($resolution, $resolution)  # Tamaño de la imagen 32x32
+    $pictureBoxType.Location = New-Object System.Drawing.Point(20, $vY)  # Posición 20x20
+    $form.Controls.Add($pictureBoxType)
+
+    # Crear una etiqueta (Label) para el texto
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = "Tipo de licencia:"
+    $label.Font = New-Object System.Drawing.Font("Arial", 10, [System.Drawing.FontStyle]::Bold)
+    $label.AutoSize = $true
+
+    # Posicionar el texto 30 píxeles a la derecha de la imagen y centrado verticalmente con respecto a la altura de la imagen
+    $textX = $pictureBoxType.Location.X + $pictureBoxType.Width + 5  # 32 (ancho imagen) + 15 (espaciado)
+    $textY = $pictureBoxType.Location.Y + ($pictureBoxType.Height - $label.Height) / 2 # Centrado vertical
+
+    $label.Location = New-Object System.Drawing.Point($textX, $textY)
+
+    $form.Controls.Add($label)
+
+    # Crear una etiqueta (Label) para el texto
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = "$typeLicence"
+    $label.Font = New-Object System.Drawing.Font("Arial", 10)
+    $label.AutoSize = $true
+
+    # Posicionar el texto 30 píxeles a la derecha de la imagen y centrado verticalmente con respecto a la altura de la imagen
+    $textX = $pictureBoxType.Location.X + $pictureBoxType.Width + $posTextTitle  # 32 (ancho imagen) + 15 (espaciado)
+    $textY = $pictureBoxType.Location.Y + ($pictureBoxType.Height - $label.Height) / 2 # Centrado vertical
+
+    $label.Location = New-Object System.Drawing.Point($textX, $textY)
+
+    $form.Controls.Add($label)
+
+	# Evento para eliminar el archivo temporal al cerrar el formulario
+	$form.Add_Shown({
+		$form.Add_FormClosed({
+			# Eliminar el archivo temporal de la imagen después de cerrar el formulario
+			Remove-Item -Path $tempImageWin -Force -ErrorAction SilentlyContinue
+			Remove-Item -Path $tempImageLice -Force -ErrorAction SilentlyContinue
+			Remove-Item -Path $tempImageType -Force -ErrorAction SilentlyContinue
+		})
+	})
+	
+	Function Out-Clipboard{
+		param($Value,[switch]$PassThru) 
+		begin {
+				[void][reflection.assembly]::LoadWithPartialName("Windows.Forms")
+			$tb = New-Object System.Windows.Forms.TextBox
+			$tb.Multiline = $true
+			$pipeObjects = @()
+		}
+		process {
+		  $pipeObjects+=$_
+		}
+		end {
+			if([string]::IsNullOrEmpty($Value)){
+				$text=$null
+				$pipeObjects | out-string -stream | %{$text = $text + $(if($text -ne $null){"`r`n"}) + $_}
+				$tb.text = $text
+			} 
+			else {
+				$tb.text = $value
+			}
+			$tb.SelectAll()
+			$tb.Copy()
+			if($PassThru){
+				$pipeObjects
+			}
+			$tb.Dispose()
+		}
+	}
+	
+	$vY += $vYmore
+	$button1 = Add-PictureBoxWithButton -x 20 -y $vY -img $imageGray -text "Copiar clave del producto"
+    $button1.add_Click({
+		# Copiar la clave al portapapeles
+		Out-Clipboard $key
+    })
+    # Añadir el PictureBox y el botón al formulario
+    $form.Controls.Add($button1)
+
+    # Mostrar la ventana de forma modal
+    $form.ShowDialog() | Out-Null
+# } | Out-Null
