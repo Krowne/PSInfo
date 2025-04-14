@@ -525,7 +525,7 @@ $sys11 = Create-CombinedImage -Window $Window -top 230 -left 295 -ancho 250 -fil
 $sys12 = Create-CombinedImage -Window $Window -top 270 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Reparar Windows'
 $sys13 = Create-CombinedImage -Window $Window -top 270 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Redes guardadas'
 
-$sys0.add_Click({ irm https://github.com/Krowne/WinInfo/raw/refs/heads/main/get-licence | iex })
+$sys0.add_Click({ irm https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/get-licence.kwn | iex })
 $sys1.add_Click({ slui 3 })
 $sys2.add_Click({ Start-Process "ms-settings:" })
 $sys3.add_Click({ control })
