@@ -537,8 +537,18 @@ $sys8.add_Click({ control.exe /name Microsoft.RegionAndLanguage })
 $sys9.add_Click({ control mmsys.cpl })
 $sys10.add_Click({ control sysdm.cpl })
 $sys11.add_Click({ msinfo32 })
-$sys12.add_Click({ irm https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/repara.kwn | iex })
-$sys13.add_Click({ irm https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/get-network.kwn | iex })
+$sys12.add_Click({ 
+	Clear-Host
+    $Window.Hide()
+	irm https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/repara.kwn | iex
+	$window.Show()
+})
+$sys13.add_Click({ 
+	Clear-Host
+    $Window.Hide()
+	irm https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/get-network.kwn | iex
+	$window.Show()
+})
 
 $fondo = '#c9e8cb'
 $fondoHvr = '#71bd76'
@@ -559,7 +569,8 @@ $clean0.add_Click({
     }
 })
 $clean1.add_Click({ 
-    # Verificar si el script se estÃƒÂ¡ ejecutando como administrador
+	$Window.Hide()
+    # Verificar si el script se estará¡ ejecutando como administrador
     Clear-Host
     if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-Host "Este script debe ejecutarse como administrador." -ForegroundColor Red
@@ -579,6 +590,7 @@ $clean1.add_Click({
 
         Write-Host "Proceso completado." -ForegroundColor Green
     }
+	$window.Show()
 })
 $fondo = '#eae2bb'
 $fondoHvr = '#c3b77a'
