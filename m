@@ -633,20 +633,20 @@ $apps0.add_Click({
     $fondoHvr = '#5863bf'
     $AppsI00 = Create-CombinedImage -Window $AppsWindow -top 105 -left 30 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Adobe Acrobat Reader' -value 'Adobe.Acrobat.Reader.64-bit' -saved $true
     $AppsI00 = set-Hand -p $AppsI00
-    #$AppsI01 = Create-CombinedImage -Window $AppsWindow -top 105 -left 208 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'AnyDesk' -value 'AnyDeskSoftwareGmbH.AnyDesk' -saved $true
-    #$AppsI01 = set-Hand -p $AppsI01
-    $AppsI01 = Create-CombinedImage -Window $AppsWindow -top 105 -left 208 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Google Chrome' -value 'Google.Chrome' -saved $true
+    $AppsI01 = Create-CombinedImage -Window $AppsWindow -top 105 -left 208 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'AnyDesk' -value 'AnyDeskSoftwareGmbH.AnyDesk' -saved $true
     $AppsI01 = set-Hand -p $AppsI01
-    $AppsI02 = Create-CombinedImage -Window $AppsWindow -top 105 -left 386 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Libre Office' -value 'TheDocumentFoundation.LibreOffice' -saved $true
+    $AppsI02 = Create-CombinedImage -Window $AppsWindow -top 105 -left 386 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Google Chrome' -value 'Google.Chrome' -saved $true
     $AppsI02 = set-Hand -p $AppsI02
-    $AppsI03 = Create-CombinedImage -Window $AppsWindow -top 145 -left 30 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Notepad++' -value 'Notepad++.Notepad++' -saved $true
+    $AppsI03 = Create-CombinedImage -Window $AppsWindow -top 145 -left 30 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Libre Office' -value 'TheDocumentFoundation.LibreOffice' -saved $true
     $AppsI03 = set-Hand -p $AppsI03
-    $AppsI04 = Create-CombinedImage -Window $AppsWindow -top 145 -left 208 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'TeamViewer' -value 'TeamViewer.TeamViewer.Host' -saved $true
+    $AppsI04 = Create-CombinedImage -Window $AppsWindow -top 145 -left 208 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Notepad++' -value 'Notepad++.Notepad++' -saved $true
     $AppsI04 = set-Hand -p $AppsI04
-    $AppsI05 = Create-CombinedImage -Window $AppsWindow -top 145 -left 386 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'VLC Player' -value 'VideoLAN.VLC' -saved $true
+    $AppsI05 = Create-CombinedImage -Window $AppsWindow -top 145 -left 386 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'TeamViewer' -value 'TeamViewer.TeamViewer.Host' -saved $true
     $AppsI05 = set-Hand -p $AppsI05
-    $AppsI06 = Create-CombinedImage -Window $AppsWindow -top 185 -left 30 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'WinRAR' -value 'RARLab.WinRAR' -saved $true
+    $AppsI06 = Create-CombinedImage -Window $AppsWindow -top 185 -left 30 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'VLC Player' -value 'VideoLAN.VLC' -saved $true
     $AppsI06 = set-Hand -p $AppsI06
+    $AppsI07 = Create-CombinedImage -Window $AppsWindow -top 185 -left 208 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'WinRAR' -value 'RARLab.WinRAR' -saved $true
+    $AppsI07 = set-Hand -p $AppsI07
     #$AppsI07 = Create-CombinedImage -Window $AppsWindow -top 185 -left 208 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text '' -value '' -saved $true
     #$AppsI07 = set-Hand -p $AppsI07
     # Verde  #c9e8cb #71bd76
@@ -669,7 +669,7 @@ $apps0.add_Click({
     $AppsI04.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
     $AppsI05.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
     $AppsI06.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
-    #$AppsI07.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
+    $AppsI07.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
 
     $InstallApps0.add_Click({
         param($sender, $eventArgs)
@@ -694,8 +694,76 @@ $apps0.add_Click({
 
 					if ($appInstalled) {
 						Write-Host "Desinstalando $($_.Text).."
-						# Si la aplicación está instalada, desinstalarla
-						$result = winget uninstall --id=$($_.Value) -e --accept-source-agreements --silent
+
+						if ($_.Value -eq "Google.Chrome") {
+							try {
+								$chromeBasePath = "C:\Program Files\Google\Chrome\Application"
+								if (Test-Path $chromeBasePath) {
+									# Buscar carpeta que coincida con un patrón de versión como 136.0.7103.93
+									$versionFolder = Get-ChildItem -Path $chromeBasePath -Directory | Where-Object { $_.Name -match '^\d+\.\d+\.\d+\.\d+$' } | Select-Object -First 1
+
+									if ($versionFolder) {
+										$installerPath = Join-Path -Path $versionFolder.FullName -ChildPath "Installer\setup.exe"
+
+										if (Test-Path $installerPath) {
+											Start-Process -FilePath $installerPath -ArgumentList "--uninstall", "--system-level", "--verbose-logging", "--force-uninstall" -Wait
+
+											# Esperar unos segundos para asegurarse de que el proceso termina
+											Start-Sleep -Seconds 5
+
+											# Eliminar toda la carpeta Chrome
+											#$chromeRoot = "C:\Program Files\Google\Chrome"
+											#if (Test-Path $chromeRoot) {
+											#    Write-Host "Eliminando carpeta completa de Google Chrome..."
+											#    Remove-Item -Path $chromeRoot -Recurse -Force
+											#}
+
+											$result = "Successfully uninstalled"
+										} else {
+											Write-Error "No se encontró el instalador de Chrome en: $installerPath"
+											$result = $false
+										}
+									} else {
+										Write-Error "No se encontró ninguna carpeta de versión dentro de: $chromeBasePath"
+										$result = $false
+									}
+								} else {
+									Write-Error "No se encontró la instalación de Google Chrome en $chromeBasePath"
+									$result = $false
+								}
+							}
+							catch {
+								Write-Error "Error al desinstalar Google Chrome: $_"
+								$result = $false
+							}
+
+						} elseif ($_.Value -eq "AnyDeskSoftwareGmbH.AnyDesk") {
+							try {
+								$anydeskPath = "C:\Program Files (x86)\AnyDesk\AnyDesk.exe"
+
+								if (Test-Path $anydeskPath) {
+									Start-Process -FilePath $anydeskPath -ArgumentList "--remove" -Wait
+									$result = "Successfully uninstalled"
+								} else {
+									Write-Error "No se encontró AnyDesk en la ruta esperada: $anydeskPath" -ForegroundColor Red
+									$result = $false
+								}
+							}
+							catch {
+								Write-Error "Error al desinstalar AnyDesk: $_" -ForegroundColor Red
+								$result = $false
+							}
+
+						} else {
+							try {
+								$result = winget uninstall --id=$($_.Value) -e --accept-source-agreements --silent
+							}
+							catch {
+								Write-Error "Error al desinstalar $($_.Text): $_" -ForegroundColor Red
+								$result = $false
+							}
+						}
+
 
 						# Verificar si el resultado contiene el mensaje de éxito
 						if ($result -match "Successfully uninstalled" -or $result -match "Desinstalación realizada con éxito") {
@@ -736,7 +804,50 @@ $apps0.add_Click({
 					try {
 						# Ejecutar el comando de instalación
 						Write-Host "Instalando $($_.Text).."
-						$result = winget install --id=$($_.Value) -e --accept-source-agreements --force
+
+						if ($_.Value -eq "Google.Chrome") {
+							try {
+								# Leer la URL desde el archivo remoto en GitHub
+								$remoteUrlFile = "https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/chrome.kwn"
+								$url = Invoke-RestMethod -Uri $remoteUrlFile
+
+								# Definir el destino y descargar
+								$dest = "$PSScriptRoot\ChromeSetup.exe"
+								Start-BitsTransfer -Source $url -Destination $dest
+
+								# Desbloquear y ejecutar silenciosamente
+								Unblock-File -Path $dest
+								Start-Process -FilePath $dest -ArgumentList "/silent" -Wait
+								Remove-Item $dest -Force
+								$result = "Successfully installed"
+							}
+							catch {
+								Write-Error "Error al instalar Google Chrome: $_" -ForegroundColor Red
+								$result = $false
+							}
+
+						} elseif ($_.Value -eq "AnyDeskSoftwareGmbH.AnyDesk") {
+								try {
+									$url = "https://download.anydesk.com/AnyDesk.exe"
+									$dest = "$env:TEMP\AnyDesk.exe"
+									Start-BitsTransfer -Source $url -Destination $dest
+									Start-Process -FilePath $dest -ArgumentList "--install `"C:\Program Files (x86)\AnyDesk`"", "--silent", "--start-with-win", "--create-desktop-icon" -Wait
+									Remove-Item $dest -Force
+									$result = "Successfully installed"
+								}
+								catch {
+									Write-Error "Error al instalar AnyDesk: $_" -ForegroundColor Red
+									$result = $false
+								}
+						}else {
+							try {
+								$result = winget install --id=$($_.Value) -e --accept-source-agreements --force
+							}
+							catch {
+								Write-Error "Error al instalar $($_.Text): $_" -ForegroundColor Red
+								$result = $false
+							}
+						}
 
 						# Verificar si el resultado contiene algún mensaje de éxito
 						if ($result -match "Successfully installed" -or $result -match "Instalado correctamente") {
