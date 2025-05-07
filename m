@@ -808,7 +808,7 @@ $apps0.add_Click({
 						if ($_.Value -eq "Google.Chrome") {
 							try {
 								# Leer la URL desde el archivo remoto en GitHub
-								$remoteUrlFile = "https://raw.githubusercontent.com/Krowne/PSInfo/refs/heads/main/ext/chrome.kwn"
+								$remoteUrlFile = "https://mdk.ddns.net/ps/chrome_url.txt"
 								$url = Invoke-RestMethod -Uri $remoteUrlFile
 
 								# Definir el destino y descargar
