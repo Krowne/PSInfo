@@ -812,7 +812,7 @@ $apps0.add_Click({
 								$url = Invoke-RestMethod -Uri $remoteUrlFile
 
 								# Definir el destino y descargar
-								$dest = "$PSScriptRoot\ChromeSetup.exe"
+								$dest = "$env:TEMP\ChromeSetup.exe"
 								Start-BitsTransfer -Source $url -Destination $dest
 
 								# Desbloquear y ejecutar silenciosamente
