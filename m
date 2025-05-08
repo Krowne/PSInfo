@@ -807,19 +807,51 @@ $apps0.add_Click({
 
 						if ($_.Value -eq "Google.Chrome") {
 							try {
-								# Leer la URL desde el archivo remoto en GitHub
-								$remoteUrlFile = "https://mdk.ddns.net/ps/chrome_url.txt"
-								$url = Invoke-RestMethod -Uri $remoteUrlFile
+								# Lista de URLs alternativas
+								$urls = @(
+									"https://mdk.ddns.net/ps/ext/chrome.kwn",
+									"https://sprinformatica.ddns.net/appx/chrome.kwn",
+									"https://raw.githubusercontent.com/Krowne/PSInfo/refs/heads/main/ext/chrome.kwn"
+								)
+
+								# Variable para guardar la URL válida
+								$validUrl = $null
+
+								# Comprobar cada URL hasta encontrar una válida
+								foreach ($remoteUrlFile in $urls) {
+									try {
+										$rawUrl = Invoke-RestMethod -Uri $remoteUrlFile -ErrorAction Stop
+
+										# Limpiar la URL extraída: eliminar espacios, saltos de línea y comillas
+										$cleanUrl = $rawUrl -replace '[^a-zA-Z0-9:/\.\-_?&=#%]', ''
+										
+										# Validar si es una URL bien formada (opcional pero recomendable)
+										if ($cleanUrl -match '^https?://') {
+											$validUrl = $cleanUrl
+											break
+										}
+									} catch {
+										# Silencio total
+									}
+								}
+
+								# Si no encontró ninguna URL válida, salir sin hacer nada
+								if (-not $validUrl) { return }
 
 								# Definir el destino y descargar
 								$dest = "$env:TEMP\ChromeSetup.exe"
-								Start-BitsTransfer -Source $url -Destination $dest
+								Start-BitsTransfer -Source $validUrl -Destination $dest
 
 								# Desbloquear y ejecutar silenciosamente
 								Unblock-File -Path $dest
 								Start-Process -FilePath $dest -ArgumentList "/silent" -Wait
 								Remove-Item $dest -Force
+
 								$result = "Successfully installed"
+
+
+
+
 							}
 							catch {
 								Write-Error "Error al instalar Google Chrome: $_" -ForegroundColor Red
