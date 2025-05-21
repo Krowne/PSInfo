@@ -215,8 +215,8 @@ chcp 65001 > $null
 	}
 	
 	# Cargar y almacenar las imágenes para todos los PictureBox
-    $imageUrlGray = $git'img/btn_gray_440.png'
-    $imageUrlSelected = $git'img/btn_selected_440.png'
+    $imageUrlGray = $git + 'img/btn_gray_440.png'
+    $imageUrlSelected = $git + 'img/btn_selected_440.png'
     $tempImagePathGray = [System.IO.Path]::GetTempFileName()
     $tempImagePathSelected = [System.IO.Path]::GetTempFileName()
 
@@ -314,9 +314,9 @@ chcp 65001 > $null
     $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
 
     # URL de la imagen
-    $imageUrlWin = $git'img/$versionWindowsImg.png'
-	$imageUrlLice = $git'img/licence.png'
-	$imageUrlActi = $git'img/$typeLicenceImg.png'
+    $imageUrlWin = $git + 'img/$versionWindowsImg.png'
+	$imageUrlLice = $git + 'img/licence.png'
+	$imageUrlActi = $git + 'img/$typeLicenceImg.png'
 
     # Ruta temporal donde se descargará la imagen
     $tempImageWin = [System.IO.Path]::GetTempFileName()
