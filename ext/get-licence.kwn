@@ -314,9 +314,9 @@ chcp 65001 > $null
     $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
 
     # URL de la imagen
-    $imageUrlWin = $git + 'img/' + $versionWindowsImg.png'
-	$imageUrlLice = $git + 'img/' + licence.png'
-	$imageUrlActi = $git + 'img/' + $typeLicenceImg.png'
+    $imageUrlWin = $git + 'img/' + $versionWindowsImg + '.png'
+	$imageUrlLice = $git + 'img/' + $licence + '.png'
+	$imageUrlActi = $git + 'img/' + $typeLicenceImg + '.png'
 
     # Ruta temporal donde se descargará la imagen
     $tempImageWin = [System.IO.Path]::GetTempFileName()
