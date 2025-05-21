@@ -6,7 +6,6 @@ chcp 65001 > $null
 
 # Ejecutar el script en segundo plano sin salida en consola
 # Start-Job -ScriptBlock {
-	$git = 'https://github.com/Krowne/PSInfo/raw/refs/heads/main/'
 	# Array con las licencias genéricas
 	$genericLicenses = @(
 		"YTMG3-N6DKC-DKB77-7M9GH-8HVX7",
@@ -215,8 +214,8 @@ chcp 65001 > $null
 	}
 	
 	# Cargar y almacenar las imágenes para todos los PictureBox
-    $imageUrlGray = $git + 'img/btn_gray_440.png'
-    $imageUrlSelected = $git + 'img/btn_selected_440.png'
+    $imageUrlGray = "https://mdk.ddns.net/ps/img/btn_gray_440.png"
+    $imageUrlSelected = "https://mdk.ddns.net/ps/img/btn_selected_440.png"
     $tempImagePathGray = [System.IO.Path]::GetTempFileName()
     $tempImagePathSelected = [System.IO.Path]::GetTempFileName()
 
@@ -314,9 +313,9 @@ chcp 65001 > $null
     $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
 
     # URL de la imagen
-    $imageUrlWin = $git + 'img/' + $versionWindowsImg + '.png'
-	$imageUrlLice = $git + 'img/' + $licence + '.png'
-	$imageUrlActi = $git + 'img/' + $typeLicenceImg + '.png'
+    $imageUrlWin = "https://mdk.ddns.net/ps/img/$versionWindowsImg.png"
+	$imageUrlLice = "https://mdk.ddns.net/ps/img/licence.png"
+	$imageUrlActi = "https://mdk.ddns.net/ps/img/$typeLicenceImg.png"
 
     # Ruta temporal donde se descargará la imagen
     $tempImageWin = [System.IO.Path]::GetTempFileName()
