@@ -493,15 +493,15 @@ function SelectedTheButtons {
 }
 
 $fondo = '#aeb2cd'
-$Window = Create-CustomWindow -Width 600 -Height 610 -Fondo $fondo -Title 'Menú de configuración del Sistema' -iconUrl $git'icons/icon.ico'
+$Window = Create-CustomWindow -Width 600 -Height 650 -Fondo $fondo -Title 'Menú de configuración del Sistema' -iconUrl $git'icons/icon.ico'
 $Window.Add_Paint({
     $graphics = $_.Graphics
     $fondo = '#c4c7dd'
     $fondoHvr = '#d4d8f6'
     Crear-Imagen -graphics $graphics -alto 300 -ancho 550 -top 15 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 255
-    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 330 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
-    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 410 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
-    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 490 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
+    Crear-Imagen -graphics $graphics -alto 100 -ancho 550 -top 330 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
+    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 450 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
+    Crear-Imagen -graphics $graphics -alto 60 -ancho 550 -top 530 -left 15 -color $fondo -border $fondoHvr -shadowRight 8 -shadowTop 5 -shadowOpacy 150
 })
 
 # Azul #b3baf5 #7785ff
@@ -525,7 +525,7 @@ $sys11 = Create-CombinedImage -Window $Window -top 230 -left 295 -ancho 250 -fil
 $sys12 = Create-CombinedImage -Window $Window -top 270 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Reparar Windows'
 $sys13 = Create-CombinedImage -Window $Window -top 270 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Redes guardadas'
 
-$sys0.add_Click({ irm https://github.com/Krowne/PSInfo/raw/refs/heads/main/ext/get-licence.kwn | iex })
+$sys0.add_Click({ . ext/get-licence.kwn })
 $sys1.add_Click({ slui 3 })
 $sys2.add_Click({ Start-Process "ms-settings:" })
 $sys3.add_Click({ control })
@@ -554,6 +554,7 @@ $fondo = '#c9e8cb'
 $fondoHvr = '#71bd76'
 $clean0 = Create-CombinedImage -Window $Window -top 345 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Historial PS' 
 $clean1 = Create-CombinedImage -Window $Window -top 345 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Windows Update'
+$clean2 = Create-CombinedImage -Window $Window -top 385 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpieza de Temporales' 
 
 $clean0.add_Click({ 
     Clear-Host
@@ -607,10 +608,28 @@ $clean1.add_Click({
 
     $Window.Show()
 })
+$clean2.add_Click({ 
+	$Window.Hide()
+	
+	# Paso 1: Configurar el Liberador de espacio en disco
+    Write-Host "Abriendo el Liberador de espacio en disco para configuración..." -ForegroundColor Yellow
+    Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sageset:99" -Wait
+
+    # Paso 2: Ejecutar la limpieza con la configuración elegida
+    Write-Host "Ejecutando la limpieza con las opciones seleccionadas..." -ForegroundColor Cyan
+    $proceso = Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:99" -PassThru
+    $proceso.WaitForExit()
+
+    # Paso 3: Avisar cuando termine
+    Write-Host "Limpieza finalizada correctamente." -ForegroundColor Green
+
+	$Window.Show()
+})
+
 $fondo = '#eae2bb'
 $fondoHvr = '#c3b77a'
-$apps0 = Create-CombinedImage -Window $Window -top 425 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Instalar Aplicaciones' 
-$apps1 = Create-CombinedImage -Window $Window -top 425 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Gestionar Entradas de Registro'
+$apps0 = Create-CombinedImage -Window $Window -top 465 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Instalar Aplicaciones' 
+$apps1 = Create-CombinedImage -Window $Window -top 465 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Gestionar Entradas de Registro'
 
 function set-Hand {
     param (
@@ -1378,8 +1397,8 @@ $apps1.add_Click({
 })
 $fondo = '#fab7b9'
 $fondoHvr = '#c14e51'
-$device0 = Create-CombinedImage -Window $Window -top 505 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Reiniciar' 
-$device1 = Create-CombinedImage -Window $Window -top 505 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Apagar'
+$device0 = Create-CombinedImage -Window $Window -top 545 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Reiniciar' 
+$device1 = Create-CombinedImage -Window $Window -top 545 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Apagar'
 
 $device0.add_Click({ 
     Clear-Host
