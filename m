@@ -611,17 +611,32 @@ $clean1.add_Click({
 $clean2.add_Click({ 
 	$Window.Hide()
 	
-	# Paso 1: Configurar el Liberador de espacio en disco
+    Clear-Host
+
+    # Paso 1: Configurar el Liberador de espacio en disco
     Write-Host "Abriendo el Liberador de espacio en disco para configuración..." -ForegroundColor Yellow
     Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sageset:99" -Wait
 
-    # Paso 2: Ejecutar la limpieza con la configuración elegida
-    Write-Host "Ejecutando la limpieza con las opciones seleccionadas..." -ForegroundColor Cyan
-    $proceso = Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:99" -PassThru
-    $proceso.WaitForExit()
+    # Paso 2: Confirmar si quiere continuar
+    $respuesta = [System.Windows.Forms.MessageBox]::Show(
+        "¿Quieres ejecutar ahora la limpieza con las opciones que hayas seleccionado?",
+        "Confirmar limpieza",
+        [System.Windows.Forms.MessageBoxButtons]::YesNo,
+        [System.Windows.Forms.MessageBoxIcon]::Question
+    )
 
-    # Paso 3: Avisar cuando termine
-    Write-Host "Limpieza finalizada correctamente." -ForegroundColor Green
+    if ($respuesta -eq [System.Windows.Forms.DialogResult]::Yes) {
+        # Ejecutar la limpieza
+        Write-Host "Ejecutando la limpieza con las opciones seleccionadas..." -ForegroundColor Cyan
+        $proceso = Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:99" -PassThru
+        $proceso.WaitForExit()
+
+        Write-Host "? Limpieza finalizada correctamente." -ForegroundColor Green
+        [System.Windows.Forms.MessageBox]::Show("La limpieza de disco se ha completado correctamente.", "Limpieza finalizada", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+    }
+    else {
+        Write-Host "Limpieza cancelada por el usuario." -ForegroundColor Red
+    }
 
 	$Window.Show()
 })
