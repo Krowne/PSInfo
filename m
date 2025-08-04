@@ -631,7 +631,7 @@ $clean2.add_Click({
         $proceso = Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:99" -PassThru
         $proceso.WaitForExit()
 
-        Write-Host "? Limpieza finalizada correctamente." -ForegroundColor Green
+        Write-Host "Limpieza finalizada correctamente." -ForegroundColor Green
         [System.Windows.Forms.MessageBox]::Show("La limpieza de disco se ha completado correctamente.", "Limpieza finalizada", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
     }
     else {
