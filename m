@@ -569,28 +569,43 @@ $clean0.add_Click({
     }
 })
 $clean1.add_Click({ 
-	$Window.Hide()
-    # Verificar si el script se estará¡ ejecutando como administrador
+    $Window.Hide()
     Clear-Host
+
+    # Verificar si el script se está ejecutando como administrador
     if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-Host "Este script debe ejecutarse como administrador." -ForegroundColor Red
     }
     else {
-        # Detener el servicio de Windows Update
-        Write-Host "Deteniendo el servicio de Windows Update..."
+        Write-Host "Deteniendo servicios de Windows Update..." -ForegroundColor Yellow
+        Stop-Service -Name "bits" -Force
         Stop-Service -Name "wuauserv" -Force
+        Stop-Service -Name "cryptsvc" -Force
+        Stop-Service -Name "msiserver" -Force
 
-        # Borrar los archivos y carpetas dentro de C:\Windows\SoftwareDistribution\
-        Write-Host "Borrando archivos y carpetas dentro de C:\Windows\SoftwareDistribution\..."
-        Remove-Item -Path "C:\Windows\SoftwareDistribution\*" -Recurse -Force
+        Write-Host "Deshabilitando servicio de Windows Update..." -ForegroundColor Yellow
+        sc.exe config wuauserv start= disabled | Out-Null
 
-        # Iniciar el servicio de Windows Update
-        Write-Host "Iniciando el servicio de Windows Update..." -ForegroundColor Cyan
+        Write-Host "Configurando servicios de Windows Update para inicio manual..." -ForegroundColor Yellow
+        sc.exe config wuauserv start= demand | Out-Null
+        sc.exe config bits start= demand | Out-Null
+        sc.exe config cryptsvc start= demand | Out-Null
+        sc.exe config msiserver start= demand | Out-Null
+
+        # Borrar los archivos de SoftwareDistribution
+        Write-Host "Borrando archivos y carpetas dentro de C:\Windows\SoftwareDistribution\..." -ForegroundColor Yellow
+        Remove-Item -Path "C:\Windows\SoftwareDistribution\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+        Write-Host "Iniciando servicios..." -ForegroundColor Cyan
         Start-Service -Name "wuauserv"
+        Start-Service -Name "bits"
+        Start-Service -Name "cryptsvc"
+        Start-Service -Name "msiserver"
 
         Write-Host "Proceso completado." -ForegroundColor Green
     }
-	$window.Show()
+
+    $Window.Show()
 })
 $fondo = '#eae2bb'
 $fondoHvr = '#c3b77a'
