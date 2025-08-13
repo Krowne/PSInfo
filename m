@@ -707,7 +707,35 @@ $apps0.add_Click({
     $InstallApps1 = Create-CombinedImage -Window $AppsWindow -top 245 -left 386 -ancho 163 -filter $fondo1 -Sfilter $fondoHvr1 -text 'Instalar'
     $InstallApps1 = set-Hand -p $InstallApps1
 
-    $AppsC0.add_Click({ Start-Process "ms-windows-store://pdp/?productid=9NBLGGH4NNS1" })
+    $AppsC0.add_Click({ 
+		$storeUrl = "ms-windows-store://pdp/?productid=9NBLGGH4NNS1"
+		try {
+			Start-Process $storeUrl -ErrorAction Stop
+		}
+		catch {
+			Write-Host "Error al iniciar la tienda. No se pudo encontrar o está dañada." -ForegroundColor Yellow
+			Write-Host "Iniciando proceso de reparación automático. Esto puede tardar unos segundos..." -ForegroundColor Yellow
+
+			# --- Inicio del comando de reparación (sin la barra de progreso) ---
+			$OldPreference = $ProgressPreference
+			$ProgressPreference = 'SilentlyContinue'
+			Get-AppxPackage -AllUsers *WindowsStore* | Foreach {
+				Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"
+			}
+			$ProgressPreference = $OldPreference
+			# --- Fin del comando de reparación ---
+
+			Write-Host "Reparación completada." -ForegroundColor Green
+			
+			# Damos un par de segundos al sistema para que asimile el cambio.
+			Start-Sleep -Seconds 3
+			Write-Host "Reintentando abrir la tienda..." -ForegroundColor Cyan
+			
+			# 5. Volvemos a lanzar el proceso.
+			#    Si vuelve a fallar aquí, el error sí se mostrará, indicando un problema más grave.
+			Start-Process $storeUrl
+		}
+	})
     $AppsC1.add_Click({ $AppsWindow.Hide(); get-AppWin -text "XBox Installer" -url1 "https://dlassets-ssl.xboxlive.com/public/content/XboxInstaller/XboxInstaller.exe" -url2 "https://sprinformatica.ddns.net/appx/XboxInstaller.exe" -output "C:\XboxInstaller.exe"; $AppsWindow.Show() })
     $AppsC2.add_Click({ $AppsWindow.Hide(); get-AppWin -text "Windows Defender" -url1 "https://catalog.s.download.windowsupdate.com/c/msdownload/update/software/defu/2025/01/securityhealthsetup_c6fc6cfabf15471436d34fb1784816d2820cc4fe.exe" -url2 $null -output "C:\WindowsDefenderInstaller.exe"; $AppsWindow.Show() })
 
@@ -729,13 +757,33 @@ $apps0.add_Click({
 		saltos
 		$SelectedButtons | ForEach-Object { 
             if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-                Write-Host "Winget no está instalado. Abriendo la tienda de Microsoft para instalarlo..." -ForegroundColor Yellow
-                
-                # URI para abrir la tienda de Microsoft en la página de Winget
-                $wingetStoreUri = "ms-windows-store://pdp/?productid=9NBLGGH4NNS1"
-                
-                # Abrir la tienda
-                Start-Process -FilePath $wingetStoreUri
+				$storeUrl = "ms-windows-store://pdp/?productid=9NBLGGH4NNS1"
+				try {
+					Start-Process $storeUrl -ErrorAction Stop
+				}
+				catch {
+					Write-Host "Error al iniciar la tienda. No se pudo encontrar o está dañada." -ForegroundColor Yellow
+					Write-Host "Iniciando proceso de reparación automático. Esto puede tardar unos segundos..." -ForegroundColor Yellow
+
+					# --- Inicio del comando de reparación (sin la barra de progreso) ---
+					$OldPreference = $ProgressPreference
+					$ProgressPreference = 'SilentlyContinue'
+					Get-AppxPackage -AllUsers *WindowsStore* | Foreach {
+						Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"
+					}
+					$ProgressPreference = $OldPreference
+					# --- Fin del comando de reparación ---
+
+					Write-Host "Reparación completada." -ForegroundColor Green
+					
+					# Damos un par de segundos al sistema para que asimile el cambio.
+					Start-Sleep -Seconds 3
+					Write-Host "Reintentando abrir la tienda..." -ForegroundColor Cyan
+					
+					# 5. Volvemos a lanzar el proceso.
+					#    Si vuelve a fallar aquí, el error sí se mostrará, indicando un problema más grave.
+					Start-Process $storeUrl
+				}
             } else {
 				try {
 					# Verificar si la aplicación ya está instalada
@@ -842,13 +890,33 @@ $apps0.add_Click({
 			saltos
 			$SelectedButtons | ForEach-Object { 
 				if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-					Write-Host "Winget no está instalado. Abriendo la tienda de Microsoft para instalarlo..." -ForegroundColor Yellow
-					
-					# URI para abrir la tienda de Microsoft en la página de Winget
-					$wingetStoreUri = "ms-windows-store://pdp/?productid=9NBLGGH4NNS1"
-					
-					# Abrir la tienda
-					Start-Process -FilePath $wingetStoreUri
+					$storeUrl = "ms-windows-store://pdp/?productid=9NBLGGH4NNS1"
+					try {
+						Start-Process $storeUrl -ErrorAction Stop
+					}
+					catch {
+						Write-Host "Error al iniciar la tienda. No se pudo encontrar o está dañada." -ForegroundColor Yellow
+						Write-Host "Iniciando proceso de reparación automático. Esto puede tardar unos segundos..." -ForegroundColor Yellow
+
+						# --- Inicio del comando de reparación (sin la barra de progreso) ---
+						$OldPreference = $ProgressPreference
+						$ProgressPreference = 'SilentlyContinue'
+						Get-AppxPackage -AllUsers *WindowsStore* | Foreach {
+							Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"
+						}
+						$ProgressPreference = $OldPreference
+						# --- Fin del comando de reparación ---
+
+						Write-Host "Reparación completada." -ForegroundColor Green
+						
+						# Damos un par de segundos al sistema para que asimile el cambio.
+						Start-Sleep -Seconds 3
+						Write-Host "Reintentando abrir la tienda..." -ForegroundColor Cyan
+						
+						# 5. Volvemos a lanzar el proceso.
+						#    Si vuelve a fallar aquí, el error sí se mostrará, indicando un problema más grave.
+						Start-Process $storeUrl
+					}
 				} else {
 					try {
 						# Ejecutar el comando de instalación
