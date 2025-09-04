@@ -553,8 +553,10 @@ $sys13.add_Click({
 $fondo = '#c9e8cb'
 $fondoHvr = '#71bd76'
 $clean0 = Create-CombinedImage -Window $Window -top 345 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Historial PS' 
-$clean1 = Create-CombinedImage -Window $Window -top 345 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Windows Update'
-$clean2 = Create-CombinedImage -Window $Window -top 385 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpieza de Temporales' 
+$clean1 = Create-CombinedImage -Window $Window -top 345 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpieza de Temporales'
+$clean2 = Create-CombinedImage -Window $Window -top 385 -left 30 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Windows Update' 
+$clean3 = Create-CombinedImage -Window $Window -top 385 -left 295 -ancho 250 -filter $fondo -Sfilter $fondoHvr -text 'Limpiar Windows Update (Red)'
+
 
 $clean0.add_Click({ 
     Clear-Host
@@ -570,6 +572,38 @@ $clean0.add_Click({
     }
 })
 $clean1.add_Click({ 
+	$Window.Hide()
+	
+    Clear-Host
+
+    # Paso 1: Configurar el Liberador de espacio en disco
+    Write-Host "Abriendo el Liberador de espacio en disco para configuración..." -ForegroundColor Yellow
+    Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sageset:99" -Wait
+
+    # Paso 2: Confirmar si quiere continuar
+    $respuesta = [System.Windows.Forms.MessageBox]::Show(
+        "¿Quieres ejecutar ahora la limpieza con las opciones que hayas seleccionado?",
+        "Confirmar limpieza",
+        [System.Windows.Forms.MessageBoxButtons]::YesNo,
+        [System.Windows.Forms.MessageBoxIcon]::Question
+    )
+
+    if ($respuesta -eq [System.Windows.Forms.DialogResult]::Yes) {
+        # Ejecutar la limpieza
+        Write-Host "Ejecutando la limpieza con las opciones seleccionadas..." -ForegroundColor Cyan
+        $proceso = Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:99" -PassThru
+        $proceso.WaitForExit()
+
+        Write-Host "Limpieza finalizada correctamente." -ForegroundColor Green
+        [System.Windows.Forms.MessageBox]::Show("La limpieza de disco se ha completado correctamente.", "Limpieza finalizada", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+    }
+    else {
+        Write-Host "Limpieza cancelada por el usuario." -ForegroundColor Red
+    }
+
+	$Window.Show()
+})
+$clean2.add_Click({ 
     $Window.Hide()
     Clear-Host
 
@@ -608,38 +642,132 @@ $clean1.add_Click({
 
     $Window.Show()
 })
-$clean2.add_Click({ 
-	$Window.Hide()
-	
+$clean3.add_Click({
+    $Window.Hide()
     Clear-Host
 
-    # Paso 1: Configurar el Liberador de espacio en disco
-    Write-Host "Abriendo el Liberador de espacio en disco para configuración..." -ForegroundColor Yellow
-    Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sageset:99" -Wait
+    # Verificar ejecución como administrador
+    if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+        Write-Host "Este script debe ejecutarse como administrador." -ForegroundColor Red
+        $Window.Show()
+        return
+    }
 
-    # Paso 2: Confirmar si quiere continuar
-    $respuesta = [System.Windows.Forms.MessageBox]::Show(
-        "¿Quieres ejecutar ahora la limpieza con las opciones que hayas seleccionado?",
-        "Confirmar limpieza",
-        [System.Windows.Forms.MessageBoxButtons]::YesNo,
-        [System.Windows.Forms.MessageBoxIcon]::Question
+    # Crear ventana de progreso
+    $progressForm = New-Object System.Windows.Forms.Form
+    $progressForm.Text = "Reset de Windows Update"
+    $progressForm.Size = New-Object System.Drawing.Size(450,120)
+    $progressForm.StartPosition = "CenterScreen"
+    $progressForm.Topmost = $true
+    $progressForm.FormBorderStyle = "FixedDialog"
+    $progressForm.MaximizeBox = $false
+    $progressForm.MinimizeBox = $false
+
+    $progressBar = New-Object System.Windows.Forms.ProgressBar
+    $progressBar.Location = '20,40'
+    $progressBar.Size = '400,25'
+    $progressBar.Minimum = 0
+    $progressBar.Maximum = 100
+    $progressBar.Value = 0
+    $progressForm.Controls.Add($progressBar)
+
+    $progressLabel = New-Object System.Windows.Forms.Label
+    $progressLabel.Location = '20,10'
+    $progressLabel.Size = '400,20'
+    $progressLabel.Text = "Iniciando..."
+    $progressForm.Controls.Add($progressLabel)
+
+    # Mostrar ventana de progreso
+    $progressForm.Show()
+    $progressForm.Refresh()
+
+    # Definir pasos con porcentaje
+    $steps = @(
+        @{Action="Deteniendo servicios..."; Value=10},
+        @{Action="Borrando cachés y SoftwareDistribution..."; Value=30},
+        @{Action="Borrando Catroot2 y logs..."; Value=45},
+        @{Action="Procesando pending.xml..."; Value=55},
+        @{Action="Limpiando DNS..."; Value=60},
+        @{Action="Restableciendo permisos de servicios..."; Value=70},
+        @{Action="Re-registrando DLLs de Windows Update..."; Value=85},
+        @{Action="Reiniciando Winsock y proxy..."; Value=90},
+        @{Action="Eliminando políticas y actualizando..."; Value=95},
+        @{Action="Iniciando servicios y finalizando..."; Value=100}
     )
 
-    if ($respuesta -eq [System.Windows.Forms.DialogResult]::Yes) {
-        # Ejecutar la limpieza
-        Write-Host "Ejecutando la limpieza con las opciones seleccionadas..." -ForegroundColor Cyan
-        $proceso = Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:99" -PassThru
-        $proceso.WaitForExit()
+    # Servicios a detener/iniciar
+    $services = @("bits", "wuauserv", "cryptsvc", "msiserver")
 
-        Write-Host "Limpieza finalizada correctamente." -ForegroundColor Green
-        [System.Windows.Forms.MessageBox]::Show("La limpieza de disco se ha completado correctamente.", "Limpieza finalizada", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
-    }
-    else {
-        Write-Host "Limpieza cancelada por el usuario." -ForegroundColor Red
+    foreach ($step in $steps) {
+        $progressBar.Value = $step.Value
+        $progressLabel.Text = $step.Action
+        $progressForm.Refresh()
+        Start-Sleep -Milliseconds 200  # Pausa para que se vea la actualización
+
+        switch ($step.Action) {
+            "Deteniendo servicios..." {
+                foreach ($svc in $services) { Try { Stop-Service -Name $svc -Force -ErrorAction Stop } Catch { Write-Warning "No se pudo detener $svc" } }
+            }
+            "Borrando cachés y SoftwareDistribution..." {
+                $sd = "C:\Windows\SoftwareDistribution"
+                if (Test-Path $sd) { Remove-Item -Path "$sd\*" -Recurse -Force -ErrorAction SilentlyContinue }
+            }
+            "Borrando Catroot2 y logs..." {
+                $catroot2 = "C:\Windows\System32\Catroot2"
+                if (Test-Path $catroot2) { Rename-Item -Path $catroot2 -NewName "Catroot2.bak" -Force }
+                $wuLogs = "C:\Windows\Logs\WindowsUpdate"
+                if (Test-Path $wuLogs) { Remove-Item -Path "$wuLogs\*" -Recurse -Force -ErrorAction SilentlyContinue }
+            }
+            "Procesando pending.xml..." {
+                $pending = "C:\Windows\winsxs\pending.xml"
+                if (Test-Path $pending) {
+                    Takeown /f $pending
+                    attrib -r -s -h $pending
+                    Rename-Item -Path $pending -NewName "pending.xml.bak"
+                }
+            }
+            "Limpiando DNS..." { ipconfig /flushdns | Out-Null }
+            "Restableciendo permisos de servicios..." {
+                sc.exe sdset bits "D:(A;CI;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCRRC;;;IU)(A;;CCLCSWLOCRRC;;;SU)" | Out-Null
+                sc.exe sdset wuauserv "D:(A;;CCLCSWRPLORC;;;AU)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;SY)" | Out-Null
+            }
+            "Re-registrando DLLs de Windows Update..." {
+                $dlls = @(
+                    "atl.dll","urlmon.dll","mshtml.dll","shdocvw.dll","browseui.dll","jscript.dll","vbscript.dll",
+                    "scrrun.dll","msxml.dll","msxml3.dll","msxml6.dll","actxprxy.dll","softpub.dll","wintrust.dll",
+                    "dssenh.dll","rsaenh.dll","gpkcsp.dll","sccbase.dll","slbcsp.dll","cryptdlg.dll","oleaut32.dll",
+                    "ole32.dll","shell32.dll","initpki.dll","wuapi.dll","wuaueng.dll","wuaueng1.dll","wucltui.dll",
+                    "wups.dll","wups2.dll","wuweb.dll","qmgr.dll","qmgrprxy.dll","wucltux.dll","muweb.dll","wuwebv.dll"
+                )
+                foreach ($dll in $dlls) { regsvr32.exe /s $dll }
+            }
+            "Reiniciando Winsock y proxy..." {
+                netsh winsock reset | Out-Null
+                netsh winsock reset proxy | Out-Null
+            }
+            "Eliminando políticas y actualizando..." {
+                reg delete "HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /f | Out-Null
+                reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate" /f | Out-Null
+                reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /f | Out-Null
+                reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate" /f | Out-Null
+                gpupdate /force | Out-Null
+            }
+            "Iniciando servicios y finalizando..." {
+                foreach ($svc in $services) { Try { Start-Service -Name $svc -ErrorAction Stop } Catch { Write-Warning "No se pudo iniciar $svc" } }
+            }
+        }
     }
 
-	$Window.Show()
+    $progressForm.Close()
+
+    Write-Host "`nProceso completado. Se recomienda reiniciar el equipo para completar el reset." -ForegroundColor Green
+    $respuesta = Read-Host "Pulsa Enter para reiniciar ahora o cierra la ventana para reiniciar más tarde"
+    if ($respuesta -eq "") { Restart-Computer -Force }
+
+    $Window.Show()
 })
+
+
 
 $fondo = '#eae2bb'
 $fondoHvr = '#c3b77a'
