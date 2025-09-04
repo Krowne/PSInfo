@@ -746,19 +746,22 @@ $clean3.add_Click({
             }
             "Eliminando políticas y actualizando..." {
                 $regPaths = @(
-                    "HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
-                    "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate",
-                    "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
-                    "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate"
-                )
-                foreach ($reg in $regPaths) {
-                    Try {
-                        & reg delete "$reg" /f
-                        Write-Host "Se eliminó correctamente: $reg"
-                    } Catch {
-                        Write-Host ("Error eliminando {0}: {1}" -f $reg, $_.Exception.Message) -ForegroundColor Red
-                    }
-                }
+					"HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
+					"HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate",
+					"HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
+					"HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate"
+				)
+
+				foreach ($reg in $regPaths) {
+					if (Test-Path "Registry::$reg") {
+						Try {
+							& reg delete "$reg" /f
+							Write-Host "Se eliminó correctamente: $reg"
+						} Catch {
+							Write-Host ("Error eliminando {0}: {1}" -f $reg, $_.Exception.Message) -ForegroundColor Red
+						}
+					}
+				}
                 gpupdate /force | Out-Null
             }
             "Iniciando servicios y finalizando..." {
