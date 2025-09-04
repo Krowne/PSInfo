@@ -603,43 +603,82 @@ $clean1.add_Click({
 
 	$Window.Show()
 })
-$clean2.add_Click({ 
+$clean2.add_Click({
     $Window.Hide()
     Clear-Host
 
-    # Verificar si el script se está ejecutando como administrador
     if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-Host "Este script debe ejecutarse como administrador." -ForegroundColor Red
-    }
-    else {
-        Write-Host "Deteniendo servicios de Windows Update..." -ForegroundColor Yellow
-        Stop-Service -Name "bits" -Force
-        Stop-Service -Name "wuauserv" -Force
-        Stop-Service -Name "cryptsvc" -Force
-        Stop-Service -Name "msiserver" -Force
-
-        Write-Host "Deshabilitando servicio de Windows Update..." -ForegroundColor Yellow
-        sc.exe config wuauserv start= disabled | Out-Null
-
-        Write-Host "Configurando servicios de Windows Update para inicio manual..." -ForegroundColor Yellow
-        sc.exe config wuauserv start= demand | Out-Null
-        sc.exe config bits start= demand | Out-Null
-        sc.exe config cryptsvc start= demand | Out-Null
-        sc.exe config msiserver start= demand | Out-Null
-
-        # Borrar los archivos de SoftwareDistribution
-        Write-Host "Borrando archivos y carpetas dentro de C:\Windows\SoftwareDistribution\..." -ForegroundColor Yellow
-        Remove-Item -Path "C:\Windows\SoftwareDistribution\*" -Recurse -Force -ErrorAction SilentlyContinue
-
-        Write-Host "Iniciando servicios..." -ForegroundColor Cyan
-        Start-Service -Name "wuauserv"
-        Start-Service -Name "bits"
-        Start-Service -Name "cryptsvc"
-        Start-Service -Name "msiserver"
-
-        Write-Host "Proceso completado." -ForegroundColor Green
+        $Window.Show()
+        return
     }
 
+    # Crear ventana de progreso
+    $progressForm = New-Object System.Windows.Forms.Form
+    $progressForm.Text = "Procesando Windows Update"
+    $progressForm.Size = New-Object System.Drawing.Size(450,120)
+    $progressForm.StartPosition = "CenterScreen"
+    $progressForm.Topmost = $true
+    $progressForm.FormBorderStyle = "FixedDialog"
+    $progressForm.MaximizeBox = $false
+    $progressForm.MinimizeBox = $false
+
+    $progressBar = New-Object System.Windows.Forms.ProgressBar
+    $progressBar.Location = '20,40'
+    $progressBar.Size = '400,25'
+    $progressBar.Minimum = 0
+    $progressBar.Maximum = 100
+    $progressBar.Value = 0
+    $progressForm.Controls.Add($progressBar)
+
+    $progressLabel = New-Object System.Windows.Forms.Label
+    $progressLabel.Location = '20,10'
+    $progressLabel.Size = '400,20'
+    $progressLabel.Text = "Iniciando..."
+    $progressForm.Controls.Add($progressLabel)
+
+    $progressForm.Show()
+    $progressForm.Refresh()
+
+    # Pasos con valor de progreso
+    $steps = @(
+        @{Action="Deteniendo servicios..."; Value=20},
+        @{Action="Deshabilitando servicio wuauserv..."; Value=35},
+        @{Action="Configurando servicios a manual..."; Value=50},
+        @{Action="Borrando SoftwareDistribution..."; Value=70},
+        @{Action="Iniciando servicios..."; Value=90},
+        @{Action="Proceso completado"; Value=100}
+    )
+
+    $services = @("bits", "wuauserv", "cryptsvc", "msiserver")
+
+    foreach ($step in $steps) {
+        $progressBar.Value = $step.Value
+        $progressLabel.Text = $step.Action
+        $progressForm.Refresh()
+        Start-Sleep -Milliseconds 200
+
+        switch ($step.Action) {
+            "Deteniendo servicios..." {
+                foreach ($svc in $services) { Try { Stop-Service -Name $svc -Force -ErrorAction Stop } Catch { Write-Warning "No se pudo detener $svc" } }
+            }
+            "Deshabilitando servicio wuauserv..." {
+                sc.exe config wuauserv start= disabled | Out-Null
+            }
+            "Configurando servicios a manual..." {
+                foreach ($svc in $services) { sc.exe config $svc start= demand | Out-Null }
+            }
+            "Borrando SoftwareDistribution..." {
+                $sd = "C:\Windows\SoftwareDistribution"
+                if (Test-Path $sd) { Remove-Item -Path "$sd\*" -Recurse -Force -ErrorAction SilentlyContinue }
+            }
+            "Iniciando servicios..." {
+                foreach ($svc in $services) { Try { Start-Service -Name $svc -ErrorAction Stop } Catch { Write-Warning "No se pudo iniciar $svc" } }
+            }
+        }
+    }
+
+    $progressForm.Close()
     $Window.Show()
 })
 $clean3.add_Click({
