@@ -646,7 +646,6 @@ $clean3.add_Click({
     $Window.Hide()
     Clear-Host
 
-    # Verificar ejecución como administrador
     if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
         Write-Host "Este script debe ejecutarse como administrador." -ForegroundColor Red
         $Window.Show()
@@ -677,11 +676,10 @@ $clean3.add_Click({
     $progressLabel.Text = "Iniciando..."
     $progressForm.Controls.Add($progressLabel)
 
-    # Mostrar ventana de progreso
     $progressForm.Show()
     $progressForm.Refresh()
 
-    # Definir pasos con porcentaje
+    # Definir pasos
     $steps = @(
         @{Action="Deteniendo servicios..."; Value=10},
         @{Action="Borrando cachés y SoftwareDistribution..."; Value=30},
@@ -695,14 +693,13 @@ $clean3.add_Click({
         @{Action="Iniciando servicios y finalizando..."; Value=100}
     )
 
-    # Servicios a detener/iniciar
     $services = @("bits", "wuauserv", "cryptsvc", "msiserver")
 
     foreach ($step in $steps) {
         $progressBar.Value = $step.Value
         $progressLabel.Text = $step.Action
         $progressForm.Refresh()
-        Start-Sleep -Milliseconds 200  # Pausa para que se vea la actualización
+        Start-Sleep -Milliseconds 200
 
         switch ($step.Action) {
             "Deteniendo servicios..." {
@@ -746,10 +743,20 @@ $clean3.add_Click({
                 netsh winsock reset proxy | Out-Null
             }
             "Eliminando políticas y actualizando..." {
-                reg delete "HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /f | Out-Null
-                reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate" /f | Out-Null
-                reg delete "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" /f | Out-Null
-                reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate" /f | Out-Null
+                $regPaths = @(
+                    "HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
+                    "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate",
+                    "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
+                    "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate"
+                )
+                foreach ($reg in $regPaths) {
+					Try {
+						reg delete $reg /f -ErrorAction Stop
+						Write-Host "Se eliminó correctamente: $reg"
+					} Catch {
+						Write-Host ("Error eliminando {0}: {1}" -f $reg, $_.Exception.Message) -ForegroundColor Red
+					}
+                }
                 gpupdate /force | Out-Null
             }
             "Iniciando servicios y finalizando..." {
@@ -760,9 +767,24 @@ $clean3.add_Click({
 
     $progressForm.Close()
 
-    Write-Host "`nProceso completado. Se recomienda reiniciar el equipo para completar el reset." -ForegroundColor Green
-    $respuesta = Read-Host "Pulsa Enter para reiniciar ahora o cierra la ventana para reiniciar más tarde"
-    if ($respuesta -eq "") { Restart-Computer -Force }
+    # Ventana de reinicio personalizada
+    $Win2 = Create-CustomWindow -Width 320 -Height 100 -Fondo '#aeb2cd' -Title 'Reinicio necesario' -iconUrl $git'icons/restart.ico'
+    $confirmNO = Create-CombinedImage -Window $Win2 -top 15 -left 80 -ancho 100 -filter '#e0e0e0' -Sfilter '#bbbbbb' -text 'Cancelar' 
+    $confirmNO = set-Hand -p $confirmNO
+    $confirmYES = Create-CombinedImage -Window $Win2 -top 15 -left 190 -ancho 100 -filter '#fab7b9' -Sfilter '#c14e51' -text 'Confirmar'
+    $confirmYES = set-Hand -p $confirmYES
+
+    $confirmNO.add_Click({ $Win2.Close() })
+    $confirmYES.add_Click({
+        Clear-Host
+        $Win2.Close()
+        $Window.Close()
+        Write-Host "Reiniciando el equipo.."
+        Restart-Computer -Force
+    })
+
+    $Win2.Add_Shown({ $Win2.Activate() })
+    $Win2.ShowDialog()
 
     $Window.Show()
 })
