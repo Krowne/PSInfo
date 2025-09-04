@@ -615,7 +615,7 @@ $clean2.add_Click({
 
     # Crear ventana de progreso
     $progressForm = New-Object System.Windows.Forms.Form
-    $progressForm.Text = "Procesando Windows Update"
+    $progressForm.Text = "Limpieza de Windows Update"
     $progressForm.Size = New-Object System.Drawing.Size(450,120)
     $progressForm.StartPosition = "CenterScreen"
     $progressForm.Topmost = $true
@@ -660,7 +660,10 @@ $clean2.add_Click({
 
         switch ($step.Action) {
             "Deteniendo servicios..." {
-                foreach ($svc in $services) { Try { Stop-Service -Name $svc -Force -ErrorAction Stop } Catch { Write-Warning "No se pudo detener $svc" } }
+                foreach ($svc in $services) { 
+                    Try { Stop-Service -Name $svc -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null } 
+                    Catch { Write-Warning "No se pudo detener $svc" } 
+                }
             }
             "Deshabilitando servicio wuauserv..." {
                 sc.exe config wuauserv start= disabled | Out-Null
@@ -673,7 +676,10 @@ $clean2.add_Click({
                 if (Test-Path $sd) { Remove-Item -Path "$sd\*" -Recurse -Force -ErrorAction SilentlyContinue }
             }
             "Iniciando servicios..." {
-                foreach ($svc in $services) { Try { Start-Service -Name $svc -ErrorAction Stop } Catch { Write-Warning "No se pudo iniciar $svc" } }
+                foreach ($svc in $services) { 
+                    Try { Start-Service -Name $svc -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null } 
+                    Catch { Write-Warning "No se pudo iniciar $svc" } 
+                }
             }
         }
     }
@@ -693,7 +699,7 @@ $clean3.add_Click({
 
     # Crear ventana de progreso
     $progressForm = New-Object System.Windows.Forms.Form
-    $progressForm.Text = "Reset de Windows Update"
+    $progressForm.Text = "Limpieza total de Windows Update"
     $progressForm.Size = New-Object System.Drawing.Size(450,120)
     $progressForm.StartPosition = "CenterScreen"
     $progressForm.Topmost = $true
@@ -742,7 +748,10 @@ $clean3.add_Click({
 
         switch ($step.Action) {
             "Deteniendo servicios..." {
-                foreach ($svc in $services) { Try { Stop-Service -Name $svc -Force -ErrorAction Stop } Catch { Write-Warning "No se pudo detener $svc" } }
+                foreach ($svc in $services) { 
+                    Try { Stop-Service -Name $svc -Force -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null } 
+                    Catch { Write-Warning "No se pudo detener $svc" } 
+                }
             }
             "Borrando cachés y SoftwareDistribution..." {
                 $sd = "C:\Windows\SoftwareDistribution"
@@ -751,8 +760,8 @@ $clean3.add_Click({
             "Borrando Catroot2 y logs..." {
                 $catroot2 = "C:\Windows\System32\Catroot2"
                 $catroot2bak = "C:\Windows\System32\Catroot2.bak"
-                if (Test-Path $catroot2bak) { Remove-Item -Recurse -Force $catroot2bak }
-                if (Test-Path $catroot2) { Rename-Item -Path $catroot2 -NewName "Catroot2.bak" }
+                if (Test-Path $catroot2bak) { Remove-Item -Recurse -Force $catroot2bak -ErrorAction SilentlyContinue }
+                if (Test-Path $catroot2) { Rename-Item -Path $catroot2 -NewName "Catroot2.bak" -ErrorAction SilentlyContinue }
                 $wuLogs = "C:\Windows\Logs\WindowsUpdate"
                 if (Test-Path $wuLogs) { Remove-Item -Path "$wuLogs\*" -Recurse -Force -ErrorAction SilentlyContinue }
             }
@@ -761,7 +770,7 @@ $clean3.add_Click({
                 if (Test-Path $pending) {
                     Takeown /f $pending
                     attrib -r -s -h $pending
-                    Rename-Item -Path $pending -NewName "pending.xml.bak"
+                    Rename-Item -Path $pending -NewName "pending.xml.bak" -ErrorAction SilentlyContinue
                 }
             }
             "Limpiando DNS..." { ipconfig /flushdns | Out-Null }
@@ -777,7 +786,7 @@ $clean3.add_Click({
                     "ole32.dll","shell32.dll","initpki.dll","wuapi.dll","wuaueng.dll","wuaueng1.dll","wucltui.dll",
                     "wups.dll","wups2.dll","wuweb.dll","qmgr.dll","qmgrprxy.dll","wucltux.dll","muweb.dll","wuwebv.dll"
                 )
-                foreach ($dll in $dlls) { regsvr32.exe /s $dll }
+                foreach ($dll in $dlls) { regsvr32.exe /s $dll | Out-Null }
             }
             "Reiniciando Winsock y proxy..." {
                 netsh winsock reset | Out-Null
@@ -785,26 +794,23 @@ $clean3.add_Click({
             }
             "Eliminando políticas y actualizando..." {
                 $regPaths = @(
-					"HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
-					"HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate",
-					"HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
-					"HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate"
-				)
-
-				foreach ($reg in $regPaths) {
-					if (Test-Path "Registry::$reg") {
-						Try {
-							& reg delete "$reg" /f
-							Write-Host "Se eliminó correctamente: $reg"
-						} Catch {
-							Write-Host ("Error eliminando {0}: {1}" -f $reg, $_.Exception.Message) -ForegroundColor Red
-						}
-					}
-				}
+                    "HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
+                    "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate",
+                    "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate",
+                    "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\WindowsUpdate"
+                )
+                foreach ($reg in $regPaths) {
+                    if (Test-Path "Registry::$reg") {
+                        Try { & reg delete "$reg" /f | Out-Null } Catch {}
+                    }
+                }
                 gpupdate /force | Out-Null
             }
             "Iniciando servicios y finalizando..." {
-                foreach ($svc in $services) { Try { Start-Service -Name $svc -ErrorAction Stop } Catch { Write-Warning "No se pudo iniciar $svc" } }
+                foreach ($svc in $services) { 
+                    Try { Start-Service -Name $svc -WarningAction SilentlyContinue -ErrorAction SilentlyContinue | Out-Null } 
+                    Catch { Write-Warning "No se pudo iniciar $svc" } 
+                }
             }
         }
     }
@@ -832,8 +838,6 @@ $clean3.add_Click({
 
     $Window.Show()
 })
-
-
 
 $fondo = '#eae2bb'
 $fondoHvr = '#c3b77a'
