@@ -1,0 +1,2 @@
+setup.exe /download config.xml
+setup.exe /configure config.xml
