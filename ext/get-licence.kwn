@@ -70,7 +70,8 @@ chcp 65001 > $null
 		"7QNT4-HJDDR-T672J-FBFP4-2J8X9",
 		"4NX4X-C98R3-KBR22-MGBWC-D667X",
 		"NH7GX-2BPDT-FDPBD-WD893-RJMQ4",
-		"NTTX3-RV7VB-T7X7F-WQYYY-9Y92"
+		"NTTX3-RV7VB-T7X7F-WQYYY-9Y92F",
+		"43TBQ-NH92J-XKTM7-KT3KK-P39PB"
 	)
 
 	# Obtiene la información de la versión de Windows
@@ -509,3 +510,4 @@ chcp 65001 > $null
     # Mostrar la ventana de forma modal
     $form.ShowDialog() | Out-Null
 # } | Out-Null
+
