@@ -14,7 +14,7 @@ try {
 		Manage-Registration-Keys -path $key.Path -name $key.Name -value $key.Value -type $key.Type -action $key.Action
 	}
 
-	if (Test-Path "C:\Windows\System32\AbrirPowerShellAdmin.vbs") { Remove-Item "C:\Windows\System32\AbrirPowerShellAdmin.vbs" -Force }
+	if (Test-Path "C:\Windows\System32\PowerShellAdm.vbs") { Remove-Item "C:\Windows\System32\PowerShellAdm.vbs" -Force }
 }
 catch {
 	Write-Host "Error: " -ForegroundColor Red -NoNewline
