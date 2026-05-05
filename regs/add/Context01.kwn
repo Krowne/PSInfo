@@ -1,37 +1,40 @@
 $desc = $($_.Text)
 try {
+
+@"
+Set objShell = CreateObject("Shell.Application")
+Set objFSO = CreateObject("Scripting.FileSystemObject")
+If WScript.Arguments.Count > 0 Then
+    carpeta = WScript.Arguments(0)
+Else
+    carpeta = CreateObject("WScript.Shell").CurrentDirectory
+End If
+If InStr(carpeta, " ") > 0 Then
+    carpeta = Chr(34) & carpeta & Chr(34)
+End If
+objShell.ShellExecute "powershell.exe", "-NoExit -Command Set-Location " & carpeta, "", "runas", 1
+"@ | Out-File -FilePath "C:\Windows\System32\AbrirPowerShellAdmin.vbs" -Encoding ASCII -Force
+
 	Write-Host "Añadiendo: " -ForegroundColor Green -NoNewline
 	Write-Host "$desc al Menú Contextual del Explorador de Windows." -ForegroundColor Gray
 
 	$keys = @(
-		@{Path = "HKCR\Directory\background\shell\01Cmd"; Name = "MUIVerb"; Value = "Simbolo de Sistema CMD"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\background\shell\01Cmd"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\background\shell\01Cmd"; Name = "ExtendedSubCommandsKey"; Value = "Directory\ContextMenus\MenuPrompt\cmd"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "MUIVerb"; Value = "CMD como Administrador"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas\command"; Name = "(Default)"; Value = "cmd.exe /s /k pushd `"%V`""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "MUIVerb"; Value = "Windows PowerShell"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "ExtendedSubCommandsKey"; Value = "Directory\ContextMenus\MenuPrompt\Powershell"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "MUIVerb"; Value = "PowerShell modo Administrador"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas\command"; Name = "(Default)"; Value = "powershell.exe -noexit -command Set-Location '%V'"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\background\shell\01Cmd"; Name = "MUIVerb"; Value = "Simbolo de Sistema CMD"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\background\shell\01Cmd"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\background\shell\01Cmd"; Name = "ExtendedSubCommandsKey"; Value = "Directory\ContextMenus\MenuPrompt\cmd"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "MUIVerb"; Value = "CMD como Administrador"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\cmd\shell\runas\command"; Name = "(Default)"; Value = "cmd.exe /s /k pushd `"%V`""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\background\shell\02MenuPowerShell"; Name = "MUIVerb"; Value = "Windows PowerShell"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\background\shell\02MenuPowerShell"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\background\shell\02MenuPowerShell"; Name = "ExtendedSubCommandsKey"; Value = "Directory\ContextMenus\MenuPrompt\Powershell"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "MUIVerb"; Value = "PowerShell modo Administrador"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\PowerShell\shell\runas\command"; Name = "(Default)"; Value = "powershell.exe -noexit -command Set-Location '%V'"; Type = "String"; Action = "Add"}
+		@{Path = "HKCR\Directory\background\shell\runas"; Name = "(Default)"; Value = "Simbolo de Sistema CMD (Administrador)"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\runas"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\runas\command"; Name = "(Default)"; Value = "cmd.exe /s /k pushd `"%V`""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\LibraryFolder\background\shell\runas"; Name = "(Default)"; Value = "Simbolo de Sistema CMD (Administrador)"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\LibraryFolder\background\shell\runas"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\LibraryFolder\background\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\LibraryFolder\background\shell\runas\command"; Name = "(Default)"; Value = "cmd.exe /s /k pushd `"%V`""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\runasPS"; Name = "(Default)"; Value = "Símbolo de PowerShell (Administrador)"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\runasPS"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\runasPS"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\runas\commandPS"; Name = "(Default)"; Value = "wscript.exe `"C:\Windows\System32\PowerShellAdm.vbs`" `"%V`""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\LibraryFolder\background\shell\runasPS"; Name = "(Default)"; Value = "Símbolo de PowerShell (Administrador)"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\LibraryFolder\background\shell\runasPS"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\LibraryFolder\background\shell\runasPS"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\LibraryFolder\background\shell\runas\commandPS"; Name = "(Default)"; Value = "wscript.exe `"C:\Windows\System32\PowerShellAdm.vbs`" `"%V`""; Type = "String"; Action = "Add"}
 	)
 
 	foreach ($key in $keys) {
