@@ -10,7 +10,7 @@ try {
 		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "MUIVerb"; Value = "CMD como Administrador"; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "Icon"; Value = "cmd.exe"; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas\command"; Name = "(Default)"; Value = "cmd.exe /s /k pushd '%V'"; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas\command"; Name = "(Default)"; Value = "cmd.exe /s /k pushd \"%V\""; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "MUIVerb"; Value = "Windows PowerShell"; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = "ExtendedSubCommandsKey"; Value = "Directory\ContextMenus\MenuPrompt\Powershell"; Type = "String"; Action = "Add"},
