@@ -1,13 +1,17 @@
 $desc = $($_.Text)
 try {
 	Write-Host "Ocultando: " -ForegroundColor Green -NoNewline
-	Write-Host "$desc en el menú Contextual del Explorador de Archivos." -ForegroundColor Gray
+	Write-Host "$desc en el menÃº Contextual del Explorador de Archivos." -ForegroundColor Gray
 
 	$keys = @(
 		@{Path = "HKCR\Directory\background\shell\01Cmd"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
 		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
 		@{Path = "HKCR\Directory\background\shell\02MenuPowerShell"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
-		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = ""; Value = ""; Type = ""; Action = "Delete"}
+		@{Path = "HKCR\Directory\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKCR\LibraryFolder\background\shell\01Cmd"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\cmd\shell\runas"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKCR\LibraryFolder\background\shell\02MenuPowerShell"; Name = ""; Value = ""; Type = ""; Action = "Delete"},
+		@{Path = "HKCR\LibraryFolder\ContextMenus\MenuPrompt\PowerShell\shell\runas"; Name = ""; Value = ""; Type = ""; Action = "Delete"}
 	)
 
 	foreach ($key in $keys) {
@@ -16,5 +20,5 @@ try {
 }
 catch {
 	Write-Host "Error: " -ForegroundColor Red -NoNewline
-	Write-Host "No se puedo ocultar $desc en el menú Contextual del Explorador de Archivos." -ForegroundColor Gray
+	Write-Host "No se puedo ocultar $desc en el menÃº Contextual del Explorador de Archivos." -ForegroundColor Gray
 }
