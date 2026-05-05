@@ -1610,10 +1610,13 @@ $apps1.add_Click({
 		$RemContextBtn1 = set-Hand -p $RemContextBtn1
 		$RemContextBtn2 = Create-CombinedImage -Window $RemRegedit -top 330 -left 386 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Nuevo Win11' -value 'Context02' -saved $true
 		$RemContextBtn2 = set-Hand -p $RemContextBtn2
+		$RemContextBtn3 = Create-CombinedImage -Window $RemRegedit -top 330 -left 564 -ancho 163 -filter $fondo -Sfilter $fondoHvr -text 'Old. Consolas' -value 'Context03' -saved $true
+		$RemContextBtn3 = set-Hand -p $RemContextBtn3
 		
 		$RemContextBtn0.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
 		$RemContextBtn1.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
 		$RemContextBtn2.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
+        $RemContextBtn3.add_Click({ param($sender, $eventArgs); SelectedTheButtons -sender $this -eventArgs $eventArgs })
 		
 		# Gris  #e0e0e0 #8c949e
 		$fondo = '#e0e0e0'
