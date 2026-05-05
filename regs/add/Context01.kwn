@@ -30,11 +30,11 @@ objShell.ShellExecute "powershell.exe", "-NoExit -Command Set-Location " & carpe
 		@{Path = "HKCR\Directory\background\shell\runasPS"; Name = "(Default)"; Value = "Símbolo de PowerShell (Administrador)"; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\Directory\background\shell\runasPS"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\Directory\background\shell\runasPS"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\Directory\background\shell\runas\commandPS"; Name = "(Default)"; Value = "wscript.exe `"C:\Windows\System32\PowerShellAdm.vbs`" `"%V`""; Type = "String"; Action = "Add"},
+		@{Path = "HKCR\Directory\background\shell\runasPS\commandPS"; Name = "(Default)"; Value = "wscript.exe `"C:\Windows\System32\PowerShellAdm.vbs`" `"%V`""; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\LibraryFolder\background\shell\runasPS"; Name = "(Default)"; Value = "Símbolo de PowerShell (Administrador)"; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\LibraryFolder\background\shell\runasPS"; Name = "Icon"; Value = "powershell.exe"; Type = "String"; Action = "Add"},
 		@{Path = "HKCR\LibraryFolder\background\shell\runasPS"; Name = "HasLUAShield"; Value = ""; Type = "String"; Action = "Add"},
-		@{Path = "HKCR\LibraryFolder\background\shell\runas\commandPS"; Name = "(Default)"; Value = "wscript.exe `"C:\Windows\System32\PowerShellAdm.vbs`" `"%V`""; Type = "String"; Action = "Add"}
+		@{Path = "HKCR\LibraryFolder\background\shell\runasPS\commandPS"; Name = "(Default)"; Value = "wscript.exe `"C:\Windows\System32\PowerShellAdm.vbs`" `"%V`""; Type = "String"; Action = "Add"}
 	)
 
 	foreach ($key in $keys) {
