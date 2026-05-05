@@ -13,7 +13,7 @@ If InStr(carpeta, " ") > 0 Then
     carpeta = Chr(34) & carpeta & Chr(34)
 End If
 objShell.ShellExecute "powershell.exe", "-NoExit -Command Set-Location " & carpeta, "", "runas", 1
-"@ | Out-File -FilePath "C:\Windows\System32\AbrirPowerShellAdmin.vbs" -Encoding ASCII -Force
+"@ | Out-File -FilePath "C:\Windows\System32\PowerShellAdm.vbs" -Encoding ASCII -Force
 
 	Write-Host "Añadiendo: " -ForegroundColor Green -NoNewline
 	Write-Host "$desc al Menú Contextual del Explorador de Windows." -ForegroundColor Gray
